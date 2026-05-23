@@ -1,0 +1,27 @@
+import Link from "next/link";
+
+export default function AboutPage() {
+  return (
+    <div className="px-4 py-8 sm:px-6 sm:py-12">
+      <section className="mx-auto max-w-3xl border-4 border-ink bg-paper p-6 shadow-[8px_8px_0_#17120f]">
+        <p className="mb-2 text-xs font-black uppercase text-tomato">
+          Sobre el proyecto
+        </p>
+        <h1 className="mb-5 text-4xl font-black uppercase leading-none">
+          Archivo jugable
+        </h1>
+        <p className="mb-4 font-semibold leading-relaxed text-ink/80">
+          Testómetro Chileno es una plataforma para convertir tests de cultura
+          popular chilena en experiencias web responsive, preservando su contexto
+          y preparando la base para nuevas versiones.
+        </p>
+        <Link
+          className="focus-ring inline-flex border-4 border-ink bg-tomato px-5 py-3 text-sm font-black uppercase text-paper"
+          href="/tests"
+        >
+          Ver tests
+        </Link>
+      </section>
+    </div>
+  );
+}
