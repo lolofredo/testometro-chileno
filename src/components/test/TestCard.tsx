@@ -27,7 +27,7 @@ export function TestCard({ test }: { test: TestDefinition }) {
         <span className="border-r-4 border-ink bg-white px-2 py-3">
           {test.questions.length} preguntas
         </span>
-        <span className="border-r-4 border-ink bg-white px-2 py-3">Si / No</span>
+        <span className="border-r-4 border-ink bg-white px-2 py-3">Sí / No</span>
         <span className="bg-white px-2 py-3">Ranking</span>
       </div>
 

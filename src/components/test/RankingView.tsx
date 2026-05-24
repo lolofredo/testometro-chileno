@@ -7,9 +7,18 @@ import type { LeaderboardEntry, TestDefinition } from "@/lib/tests/types";
 import { getLeaderboard } from "@/lib/tests/storage";
 import { fetchRemoteLeaderboard } from "@/lib/supabase/leaderboard";
 
-export function RankingView({ test }: { test: TestDefinition }) {
+export function RankingView({
+  headingLevel = "h1",
+  test,
+  title
+}: {
+  headingLevel?: "h1" | "h2";
+  test: TestDefinition;
+  title?: string;
+}) {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [source, setSource] = useState<"local" | "global">("local");
+  const Heading = headingLevel;
 
   useEffect(() => {
     let isMounted = true;
@@ -41,9 +50,9 @@ export function RankingView({ test }: { test: TestDefinition }) {
         <p className="mb-2 text-xs font-black uppercase text-tomato">
           Marcador publico
         </p>
-        <h1 className="text-4xl font-black uppercase leading-none sm:text-6xl">
-          Ranking del Rotómetro
-        </h1>
+        <Heading className="text-3xl font-black uppercase leading-none sm:text-6xl">
+          {title ?? `Ranking ${test.title}`}
+        </Heading>
         <p className="mt-3 max-w-2xl font-semibold text-ink/75">
           {source === "global"
             ? "Ranking global conectado a Supabase."
@@ -58,7 +67,7 @@ export function RankingView({ test }: { test: TestDefinition }) {
           </p>
           <Link
             className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-3 text-sm font-black uppercase text-paper"
-            href="/tests/rotometro-original/start"
+            href={`/tests/${test.slug}/start`}
           >
             Ser el primero
             <ArrowRight size={18} strokeWidth={3} />

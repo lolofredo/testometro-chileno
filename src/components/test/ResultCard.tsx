@@ -2,10 +2,12 @@ import type { ResultRange } from "@/lib/tests/types";
 
 export function ResultCard({
   nickname,
+  testTitle,
   score,
   result
 }: {
   nickname: string;
+  testTitle: string;
   score: number;
   result: ResultRange;
 }) {
@@ -18,10 +20,10 @@ export function ResultCard({
       </div>
       <div className="relative p-5 sm:p-8">
         <p className="mb-2 text-xs font-black uppercase text-tomato">
-          Instrumento patrimonial de internet chileno
+          Resultado Testómetro Chileno
         </p>
         <h1 className="headline-shadow mb-5 text-4xl font-black uppercase leading-none sm:text-6xl">
-          {nickname} cayó en el Rotómetro
+          {nickname} cayó en el {testTitle}
         </h1>
 
         <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">

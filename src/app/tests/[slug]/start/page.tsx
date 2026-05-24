@@ -1,9 +1,19 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTestBySlug } from "@/data/rotometro-original";
+import { getTestBySlug } from "@/data/tests";
 import { StartForm } from "@/components/test/StartForm";
+import { siteConfig } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
+};
+
+export const metadata: Metadata = {
+  title: `Iniciar test | ${siteConfig.name}`,
+  robots: {
+    index: false,
+    follow: true
+  }
 };
 
 export default async function StartPage({ params }: PageProps) {

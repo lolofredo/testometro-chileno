@@ -1,20 +1,20 @@
-import { notFound } from "next/navigation";
-import { getTestBySlug } from "@/data/rotometro-original";
-import { RankingView } from "@/components/test/RankingView";
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { siteConfig } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+export const metadata: Metadata = {
+  title: `Ranking | ${siteConfig.name}`,
+  robots: {
+    index: false,
+    follow: true
+  }
+};
+
 export default async function RankingPage({ params }: PageProps) {
   const { slug } = await params;
-  const test = getTestBySlug(slug);
-
-  if (!test) notFound();
-
-  return (
-    <div className="px-4 py-8 sm:px-6 sm:py-12">
-      <RankingView test={test} />
-    </div>
-  );
+  redirect(`/rankings#ranking-${slug}`);
 }

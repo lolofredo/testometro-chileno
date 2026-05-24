@@ -112,7 +112,7 @@ export function TestPlayer({ test }: { test: TestDefinition }) {
           </div>
           <Link
             className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-white px-4 py-2 text-sm font-black uppercase hover:bg-mustard"
-            href="/tests/rotometro-original"
+            href={`/tests/${test.slug}`}
           >
             <Pause size={16} strokeWidth={3} />
             Guardar y salir

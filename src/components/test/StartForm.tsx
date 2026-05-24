@@ -96,7 +96,7 @@ export function StartForm({ test }: { test: TestDefinition }) {
         type="button"
         onClick={startTest}
       >
-        Empezar Rotómetro
+        Empezar test
         <ArrowRight size={18} strokeWidth={3} />
       </button>
     </div>
