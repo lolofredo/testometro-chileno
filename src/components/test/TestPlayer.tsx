@@ -11,6 +11,7 @@ import { calculateScore, chunkQuestions, getAnsweredCount, getResultRange } from
 import { addRemoteLeaderboardEntry } from "@/lib/supabase/leaderboard";
 import { cleanShareNickname, RANKING_NICKNAME_MAX_LENGTH } from "@/lib/share/nickname";
 import { trackEvent } from "@/lib/analytics/events";
+import { recordAnonymousAnswers } from "@/lib/analytics/answers";
 import {
   addLeaderboardEntry,
   clearAnswer,
@@ -90,6 +91,7 @@ export function TestPlayer({ test }: { test: TestDefinition }) {
     const result = getResultRange(test, score);
 
     if (!alreadyCompleted) {
+      recordAnonymousAnswers(test, completed.answers);
       trackBlockCompleted(completed, blocks.length);
       trackEvent("test_completed", {
         testSlug: test.slug,

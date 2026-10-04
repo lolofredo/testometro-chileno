@@ -32,6 +32,9 @@ export default function AboutPage() {
           popular chilena en experiencias web responsive, preservando su contexto
           y preparando la base para nuevas versiones.
         </p>
+        <p className="mb-4 font-semibold leading-relaxed text-ink/80">
+          Tus respuestas se guardan de forma anónima, sin tu nickname, para estadísticas que solo se publican como totales.
+        </p>
         <Link
           className="focus-ring inline-flex border-4 border-ink bg-tomato px-5 py-3 text-sm font-black uppercase text-paper"
           href="/tests"

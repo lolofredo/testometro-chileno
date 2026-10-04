@@ -111,6 +111,10 @@ export function StartForm({ test }: { test: TestDefinition }) {
         Empezar test
         <ArrowRight size={18} strokeWidth={3} />
       </button>
+
+      <p className="mt-3 text-center text-xs font-semibold text-ink/60">
+        Tus respuestas se guardan de forma anónima, sin tu nickname, para estadísticas que solo se publican como totales.
+      </p>
     </div>
   );
 }

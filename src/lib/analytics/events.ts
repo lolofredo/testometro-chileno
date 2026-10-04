@@ -32,7 +32,8 @@ const fromShareWindowMs = 24 * 60 * 60 * 1000;
 
 let client: SupabaseClient | null | undefined;
 
-function getEventsClient() {
+// Cliente de Supabase solo para medición (eventos y respuestas anónimas).
+export function getAnalyticsClient() {
   if (client !== undefined) return client;
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -49,7 +50,7 @@ function getEventsClient() {
 }
 
 export function trackEvent(event: EventName, data: EventData) {
-  const supabase = getEventsClient();
+  const supabase = getAnalyticsClient();
   if (!supabase) return;
 
   void supabase
