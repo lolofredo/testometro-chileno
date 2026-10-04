@@ -58,6 +58,22 @@ export function TestPlayer({ test }: { test: TestDefinition }) {
     setSession(setAnswer(session, questionOrder, answer));
   }
 
+  // Un evento por bloque terminado, para ver en qué bloque se abandona.
+  function trackBlockCompleted(completedSession: StoredSession, block: number) {
+    trackEvent("block_completed", {
+      testSlug: test.slug,
+      sessionId: completedSession.sessionId,
+      block,
+      fromShare: completedSession.fromShare
+    });
+  }
+
+  function goToNextBlock() {
+    if (!session) return;
+    trackBlockCompleted(session, blockIndex + 1);
+    goToBlock(blockIndex + 1);
+  }
+
   function goToBlock(nextBlock: number) {
     if (!session) return;
     const bounded = Math.max(0, Math.min(nextBlock, blocks.length - 1));
@@ -74,6 +90,7 @@ export function TestPlayer({ test }: { test: TestDefinition }) {
     const result = getResultRange(test, score);
 
     if (!alreadyCompleted) {
+      trackBlockCompleted(completed, blocks.length);
       trackEvent("test_completed", {
         testSlug: test.slug,
         sessionId: completed.sessionId,
@@ -168,7 +185,7 @@ export function TestPlayer({ test }: { test: TestDefinition }) {
           <button
             className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-3 text-sm font-black uppercase text-paper shadow-[5px_5px_0_#17120f]"
             type="button"
-            onClick={() => goToBlock(blockIndex + 1)}
+            onClick={goToNextBlock}
           >
             Siguiente bloque
             <ArrowRight size={18} strokeWidth={3} />

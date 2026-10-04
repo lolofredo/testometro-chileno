@@ -1,5 +1,7 @@
 -- Tabla de eventos de medición (Testómetro Chileno).
 -- Se pega una sola vez en Supabase: SQL Editor -> New query -> Run.
+-- Esquema completo actual. Si la tabla ya existía antes del evento por
+-- bloque, correr events-002-block.sql en vez de este archivo.
 -- Sin datos personales: ni nickname, ni respuestas. session_id es el código
 -- aleatorio del resultado (el mismo de /results/<session_id>).
 
@@ -10,6 +12,7 @@ create table if not exists events (
     event in (
       'test_started',
       'test_completed',
+      'block_completed',
       'share_click',
       'shared_link_opened',
       'shared_link_cta_click'
@@ -21,7 +24,8 @@ create table if not exists events (
     channel is null or channel in ('whatsapp', 'native', 'x', 'copy', 'story')
   ),
   score integer check (score is null or score between 0 and 1000),
-  from_share boolean not null default false
+  from_share boolean not null default false,
+  block smallint check (block is null or block between 1 and 50)
 );
 
 create index if not exists events_created_at_idx on events (created_at);

@@ -7,6 +7,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 export type EventName =
   | "test_started"
   | "test_completed"
+  | "block_completed"
   | "share_click"
   | "shared_link_opened"
   | "shared_link_cta_click";
@@ -19,6 +20,8 @@ type EventData = {
   channel?: ShareChannel;
   score?: number;
   fromShare?: boolean;
+  // Número de bloque (desde 1), solo en block_completed.
+  block?: number;
 };
 
 const fromShareKey = "testometro:from-share";
@@ -54,7 +57,10 @@ export function trackEvent(event: EventName, data: EventData) {
       session_id: data.sessionId ?? null,
       channel: data.channel ?? null,
       score: data.score ?? null,
-      from_share: data.fromShare ?? false
+      from_share: data.fromShare ?? false,
+      // La columna `block` solo se envía cuando hay bloque, para que los demás
+      // eventos no fallen si la tabla aún no la tiene.
+      ...(data.block !== undefined ? { block: data.block } : {})
     })
     .then(({ error }) => {
       if (error) console.warn("Could not track event", event, error.message);
