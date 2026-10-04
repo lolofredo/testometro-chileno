@@ -43,12 +43,14 @@ export function createStoredSession(input: {
   testSlug: string;
   nickname: string;
   isPublic: boolean;
+  fromShare: boolean;
 }) {
   const session: StoredSession = {
     sessionId: createSessionId(),
     testSlug: input.testSlug,
     nickname: input.nickname,
     isPublic: input.isPublic,
+    fromShare: input.fromShare,
     answers: {},
     currentBlock: 0,
     updatedAt: new Date().toISOString()

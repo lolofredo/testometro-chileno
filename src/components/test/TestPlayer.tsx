@@ -10,6 +10,7 @@ import type { AnswerValue, StoredSession, TestDefinition } from "@/lib/tests/typ
 import { calculateScore, chunkQuestions, getAnsweredCount, getResultRange } from "@/lib/tests/scoring";
 import { addRemoteLeaderboardEntry } from "@/lib/supabase/leaderboard";
 import { cleanShareNickname, RANKING_NICKNAME_MAX_LENGTH } from "@/lib/share/nickname";
+import { trackEvent } from "@/lib/analytics/events";
 import {
   addLeaderboardEntry,
   clearAnswer,
@@ -67,9 +68,19 @@ export function TestPlayer({ test }: { test: TestDefinition }) {
   async function finishTest() {
     if (!session) return;
 
+    const alreadyCompleted = Boolean(session.completedAt);
     const completed = completeSession(session);
     const score = calculateScore(test, completed.answers);
     const result = getResultRange(test, score);
+
+    if (!alreadyCompleted) {
+      trackEvent("test_completed", {
+        testSlug: test.slug,
+        sessionId: completed.sessionId,
+        score,
+        fromShare: completed.fromShare
+      });
+    }
 
     if (completed.isPublic) {
       const leaderboardEntry = {

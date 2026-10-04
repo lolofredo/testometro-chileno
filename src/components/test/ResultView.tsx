@@ -59,6 +59,7 @@ export function ResultView({
         resultTitle={resultData.result.title}
         score={resultData.score}
         nickname={session.nickname}
+        sessionId={session.sessionId}
       />
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -84,6 +85,7 @@ export function ResultView({
         resultTitle={resultData.result.title}
         score={resultData.score}
         nickname={session.nickname}
+        sessionId={session.sessionId}
       />
     </div>
   );

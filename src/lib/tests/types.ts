@@ -35,6 +35,8 @@ export type StoredSession = {
   testSlug: string;
   nickname: string;
   isPublic: boolean;
+  // Empezó el test después de abrir un resultado compartido (para medición).
+  fromShare?: boolean;
   answers: Record<string, AnswerValue>;
   currentBlock: number;
   completedAt?: string;

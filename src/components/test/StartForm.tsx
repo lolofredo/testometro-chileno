@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import type { TestDefinition } from "@/lib/tests/types";
+import { arrivedFromShare, trackEvent } from "@/lib/analytics/events";
 import {
   createStoredSession,
   getActiveSessionId,
@@ -26,10 +27,17 @@ export function StartForm({ test }: { test: TestDefinition }) {
 
   function startTest() {
     const cleanNickname = nickname.trim().slice(0, 32) || "Anonimo";
+    const fromShare = arrivedFromShare();
     const session = createStoredSession({
       testSlug: test.slug,
       nickname: cleanNickname,
-      isPublic
+      isPublic,
+      fromShare
+    });
+    trackEvent("test_started", {
+      testSlug: test.slug,
+      sessionId: session.sessionId,
+      fromShare
     });
 
     router.push(`/tests/${test.slug}/play?session=${session.sessionId}`);

@@ -5,6 +5,7 @@ import { Copy, Instagram, Share2 } from "lucide-react";
 import { absoluteUrl } from "@/lib/seo";
 import { getSharePath } from "@/lib/share/result-link";
 import { getShareText } from "@/lib/share/share-copy";
+import { trackEvent, type ShareChannel } from "@/lib/analytics/events";
 
 function WhatsAppIcon() {
   return (
@@ -32,7 +33,12 @@ type ShareInput = {
   resultTitle: string;
   score: number;
   nickname: string;
+  sessionId: string;
 };
+
+function trackShare(input: ShareInput, channel: ShareChannel) {
+  trackEvent("share_click", { testSlug: input.testSlug, sessionId: input.sessionId, channel });
+}
 
 function getShareData({ testSlug, testTitle, resultTitle, score, nickname }: ShareInput) {
   const shareUrl = absoluteUrl(getSharePath(testSlug, score, nickname));
@@ -51,6 +57,7 @@ export function StickyWhatsAppBar(props: ShareInput) {
         href={whatsappHref}
         rel="noopener noreferrer"
         target="_blank"
+        onClick={() => trackShare(props, "whatsapp")}
       >
         <WhatsAppIcon />
         Compartir por WhatsApp
@@ -59,25 +66,14 @@ export function StickyWhatsAppBar(props: ShareInput) {
   );
 }
 
-export function ShareButtons({
-  testSlug,
-  testTitle,
-  resultTitle,
-  score,
-  nickname
-}: ShareInput) {
+export function ShareButtons(props: ShareInput) {
+  const { testTitle } = props;
   const [copied, setCopied] = useState(false);
   const [canNativeShare, setCanNativeShare] = useState(false);
   const [storyFile, setStoryFile] = useState<File | null>(null);
   const [storyHint, setStoryHint] = useState(false);
 
-  const { shareUrl, shareText, whatsappHref } = getShareData({
-    testSlug,
-    testTitle,
-    resultTitle,
-    score,
-    nickname
-  });
+  const { shareUrl, shareText, whatsappHref } = getShareData(props);
   const sharePath = new URL(shareUrl).pathname;
   const storyPath = `${sharePath}/historia`;
 
@@ -109,6 +105,7 @@ export function ShareButtons({
 
   async function shareStory() {
     if (!storyFile) return;
+    trackShare(props, "story");
     // El link queda copiado para pegarlo con el sticker de enlace de Instagram.
     navigator.clipboard?.writeText(shareUrl).catch(() => {});
     setStoryHint(true);
@@ -120,6 +117,7 @@ export function ShareButtons({
   }
 
   async function nativeShare() {
+    trackShare(props, "native");
     try {
       await navigator.share({ title: testTitle, text: shareText, url: shareUrl });
     } catch {
@@ -128,6 +126,7 @@ export function ShareButtons({
   }
 
   async function copyLink() {
+    trackShare(props, "copy");
     await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1600);
@@ -147,6 +146,7 @@ export function ShareButtons({
         href={whatsappHref}
         rel="noopener noreferrer"
         target="_blank"
+        onClick={() => trackShare(props, "whatsapp")}
       >
         <WhatsAppIcon />
         Compartir por WhatsApp
@@ -164,6 +164,7 @@ export function ShareButtons({
           href={`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`}
           rel="noopener noreferrer"
           target="_blank"
+          onClick={() => trackShare(props, "x")}
         >
           <XIcon />X
         </a>
@@ -187,7 +188,10 @@ export function ShareButtons({
           className="focus-ring mt-3 flex w-full items-center justify-center gap-2 border-4 border-ink bg-mustard px-4 py-3 text-sm font-black uppercase"
           download="testometro-historia.png"
           href={storyPath}
-          onClick={() => setStoryHint(true)}
+          onClick={() => {
+            trackShare(props, "story");
+            setStoryHint(true);
+          }}
         >
           <Instagram size={18} strokeWidth={3} />
           Descargar imagen para historia

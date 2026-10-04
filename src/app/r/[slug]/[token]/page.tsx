@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ShareCtaLink, TrackSharedOpen } from "@/components/share/SharedResultTracking";
 import { ArrowRight } from "lucide-react";
 import { ResultCard } from "@/components/test/ResultCard";
 import { tests } from "@/data/tests";
@@ -82,6 +83,8 @@ export default async function SharedResultPage({ params }: PageProps) {
 
   return (
     <div className="px-4 pt-8 sm:px-6 sm:py-12">
+      <TrackSharedOpen testSlug={test.slug} />
+
       <div className="mx-auto max-w-5xl">
         <ResultCard nickname={nickname} testTitle={test.title} score={score} result={result} />
 
@@ -92,13 +95,14 @@ export default async function SharedResultPage({ params }: PageProps) {
           <p className="mx-auto mb-6 max-w-xl font-semibold leading-relaxed text-ink/80">
             {test.questions.length} preguntas de sí o no. Gratis y sin registrarte.
           </p>
-          <Link
+          <ShareCtaLink
+            sharedTestSlug={test.slug}
             className="focus-ring inline-flex w-full items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-4 text-base font-black uppercase text-paper shadow-[5px_5px_0_#17120f] transition hover:-translate-y-0.5 hover:shadow-[7px_7px_0_#17120f] sm:w-auto sm:px-10"
             href={`/tests/${test.slug}`}
           >
             {invitation.cta}
             <ArrowRight size={20} strokeWidth={3} />
-          </Link>
+          </ShareCtaLink>
         </section>
 
         {otherTests.length > 0 ? (
@@ -106,14 +110,15 @@ export default async function SharedResultPage({ params }: PageProps) {
             <p className="mb-3 text-sm font-black uppercase text-ink/60">Otros tests</p>
             <div className="grid gap-3 sm:grid-cols-2">
               {otherTests.map((item) => (
-                <Link
+                <ShareCtaLink
+                  sharedTestSlug={test.slug}
                   key={item.slug}
                   className="focus-ring flex items-center justify-between gap-3 border-4 border-ink bg-white px-5 py-4 font-black uppercase"
                   href={`/tests/${item.slug}`}
                 >
                   {item.title}
                   <ArrowRight size={18} strokeWidth={3} />
-                </Link>
+                </ShareCtaLink>
               ))}
             </div>
           </section>
@@ -121,13 +126,14 @@ export default async function SharedResultPage({ params }: PageProps) {
       </div>
 
       <div className="sticky bottom-0 z-20 -mx-4 mt-8 border-t-4 border-ink bg-mustard p-3 sm:hidden">
-        <Link
+        <ShareCtaLink
+          sharedTestSlug={test.slug}
           className="focus-ring flex w-full items-center justify-center gap-2 border-4 border-ink bg-tomato px-4 py-3 text-sm font-black uppercase text-paper"
           href={`/tests/${test.slug}`}
         >
           {invitation.question}
           <ArrowRight size={18} strokeWidth={3} />
-        </Link>
+        </ShareCtaLink>
       </div>
     </div>
   );
