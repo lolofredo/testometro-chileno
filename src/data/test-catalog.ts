@@ -1,6 +1,7 @@
 import { rotometroOriginal } from "./rotometro-original";
 import { rotometro2 } from "./rotometro-2";
 import { cuicometro } from "./cuicometro";
+import { chantometro } from "./chantometro";
 
 export type CatalogTest = {
   slug: string;
@@ -61,6 +62,22 @@ export const catalogTests: CatalogTest[] = [
     blocks: 5,
     href: `/tests/${cuicometro.slug}`,
     rankingHref: `/rankings#ranking-${cuicometro.slug}`
+  },
+  {
+    slug: chantometro.slug,
+    title: chantometro.title,
+    // "Nuevo" lo destaca y lo pone primero en la home; volver a "Disponible"
+    // cuando deje de ser novedad.
+    label: "Nuevo",
+    description: chantometro.description,
+    theme: "Humor de tribus chilenas",
+    rankingDescription:
+      "Ranking publico del Chantómetro, conectado a los resultados que la gente decide publicar.",
+    status: "available",
+    questionCount: chantometro.questions.length,
+    blocks: 5,
+    href: `/tests/${chantometro.slug}`,
+    rankingHref: `/rankings#ranking-${chantometro.slug}`
   }
 ];
 

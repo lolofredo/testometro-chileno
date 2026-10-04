@@ -12,6 +12,10 @@ const invitations: Record<string, { question: string; cta: string }> = {
   cuicometro: {
     question: "¿Y tú qué tan cuico eres?",
     cta: "Hacer el Cuicómetro"
+  },
+  chantometro: {
+    question: "¿Y tú qué tan chanta eres?",
+    cta: "Hacer el Chantómetro"
   }
 };
 

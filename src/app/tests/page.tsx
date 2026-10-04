@@ -6,9 +6,9 @@ import { catalogTests } from "@/data/test-catalog";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Tests chilenos | Rotómetro, Cuicómetro y cultura popular chilena",
+  title: "Tests chilenos | Rotómetro, Cuicómetro, Chantómetro y cultura popular chilena",
   description:
-    "Catálogo de tests chilenos de humor y cultura popular chilena: Rotómetro Original, Rotómetro 2.0, Cuicómetro y futuros tests del Testómetro Chileno.",
+    "Catálogo de tests chilenos de humor y cultura popular chilena: Rotómetro Original, Rotómetro 2.0, Cuicómetro, Chantómetro y futuros tests del Testómetro Chileno.",
   keywords: [
     ...siteConfig.keywords,
     "tests chilenos",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Tests chilenos | Testómetro Chileno",
     description:
-      "Tests de cultura popular chilena, humor chileno, Rotómetro y Cuicómetro.",
+      "Tests de cultura popular chilena, humor chileno, Rotómetro, Cuicómetro y Chantómetro.",
     url: absoluteUrl("/tests"),
     siteName: siteConfig.name,
     locale: siteConfig.locale,

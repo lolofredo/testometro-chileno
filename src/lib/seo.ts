@@ -8,7 +8,7 @@ export const siteConfig = {
   name: "Testómetro Chileno",
   fullName: "Testómetro Chileno",
   description:
-    "Tests chilenos de humor, cultura popular chilena, memes, nostalgia, Rotómetro, Cuicómetro y rarezas del Chile actual.",
+    "Tests chilenos de humor, cultura popular chilena, memes, nostalgia, Rotómetro, Cuicómetro, Chantómetro y rarezas del Chile actual.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://testometro.cl",
   locale: "es_CL",
   author: "Testómetro Chileno",
@@ -24,6 +24,8 @@ export const siteConfig = {
     "Rotómetro Original",
     "Rotómetro 2.0",
     "Cuicómetro",
+    "Chantómetro",
+    "qué tan chanta eres",
     "qué tan cuico eres",
     "qué tan roto eres",
     "chilenidad",

@@ -28,11 +28,12 @@ Sitio https://testometro.cl: tests de humor y cultura popular chilena. Next.js 1
   - `rotometro-original.ts`: 150 preguntas (intocable)
   - `rotometro-2.ts`: 50 preguntas
   - `cuicometro.ts`: 50 preguntas
+  - `chantometro.ts`: 50 preguntas (publicado el 2026-10-04; en el catálogo con etiqueta "Nuevo", que lo pone primero en la home)
   - `tests.ts`: lista de tests jugables (rutas, sitemap, rankings)
   - `test-catalog.ts`: tarjetas del catálogo
   - `memes.ts` + `public/memes/`: memes
-- El **Chantómetro** ("próximamente") no es un test: es una tarjeta escrita a mano en `homeTests` de `src/app/page.tsx`.
-- Para agregar un test: crear `src/data/<slug>.ts` con un `TestDefinition` (ver `src/lib/tests/types.ts`) y registrarlo en `tests.ts` y `test-catalog.ts`.
+- La home (`homeTests` en `src/app/page.tsx`) muestra el catálogo con los tests de etiqueta "Nuevo" primero, y el botón "Empezar ahora" lleva al test "Nuevo" (si no hay, al Cuicómetro: según Search Console es el que más tráfico trae de Google; el Original es el que menos). Ya no hay tarjetas escritas a mano.
+- Para agregar un test: crear `src/data/<slug>.ts` con un `TestDefinition` (ver `src/lib/tests/types.ts`), registrarlo en `tests.ts` y `test-catalog.ts`, agregar su invitación en `src/lib/share/share-copy.ts` y su nombre en las palabras clave/descripciones (`src/lib/seo.ts`, home, `/tests`, `/rankings`). Supabase no necesita cambios: `leaderboard_entries` y `events` aceptan cualquier slug en minúsculas.
 - `src/components/test/`: StartForm, TestPlayer, QuestionRow, ResultView/ResultCard, RankingView.
 - `src/lib/tests/`: puntaje (`scoring.ts`), guardado en navegador (`storage.ts`), tipos.
 - `src/lib/supabase/`: cliente y ranking remoto. `src/lib/seo.ts`: metadatos y JSON-LD.

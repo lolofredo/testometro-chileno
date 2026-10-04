@@ -9,11 +9,12 @@ import { absoluteUrl, siteConfig } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "Rankings | Resultados públicos de tests chilenos",
   description:
-    "Rankings públicos del Testómetro Chileno: resultados del Rotómetro Original, Rotómetro 2.0, Cuicómetro y tests de cultura popular chilena.",
+    "Rankings públicos del Testómetro Chileno: resultados del Rotómetro Original, Rotómetro 2.0, Cuicómetro, Chantómetro y tests de cultura popular chilena.",
   keywords: [
     ...siteConfig.keywords,
     "ranking Rotómetro",
     "ranking Cuicómetro",
+    "ranking Chantómetro",
     "resultados tests chilenos"
   ],
   alternates: {
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Rankings | Testómetro Chileno",
     description:
-      "Rankings públicos del Rotómetro, Cuicómetro y tests chilenos.",
+      "Rankings públicos del Rotómetro, Cuicómetro, Chantómetro y tests chilenos.",
     images: [absoluteUrl("/memes/meme-1.png")]
   }
 };
@@ -55,7 +56,7 @@ export default function RankingsPage() {
           </p>
         </div>
 
-        <div className="mb-10 grid gap-4 md:grid-cols-3">
+        <div className="mb-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {catalogTests.map((test) => (
             <Link
               className="focus-ring block border-4 border-ink bg-white p-5 shadow-[6px_6px_0_#17120f] transition hover:-translate-y-0.5 hover:bg-mustard"

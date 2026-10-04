@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Clock, Images, Play } from "lucide-react";
-import { tests } from "@/data/tests";
+import { getTestBySlug, tests } from "@/data/tests";
 import { catalogTests, type CatalogTest } from "@/data/test-catalog";
 import { memes } from "@/data/memes";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
@@ -10,14 +10,14 @@ import { absoluteUrl, siteConfig } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "Testómetro Chileno | Tests chilenos, memes y humor chileno",
   description:
-    "Plataforma de tests chilenos, memes chilenos, humor y cultura popular chilena: Rotómetro Original, Rotómetro 2.0, Cuicómetro y nostalgia del Chile actual.",
+    "Plataforma de tests chilenos, memes chilenos, humor y cultura popular chilena: Rotómetro Original, Rotómetro 2.0, Cuicómetro, Chantómetro y nostalgia del Chile actual.",
   alternates: {
     canonical: absoluteUrl("/")
   },
   openGraph: {
     title: "Testómetro Chileno",
     description:
-      "Tests chilenos de humor, cultura popular chilena, memes, nostalgia, Rotómetro y Cuicómetro.",
+      "Tests chilenos de humor, cultura popular chilena, memes, nostalgia, Rotómetro, Cuicómetro y Chantómetro.",
     url: absoluteUrl("/"),
     siteName: siteConfig.name,
     locale: siteConfig.locale,
@@ -33,18 +33,10 @@ export const metadata: Metadata = {
   }
 };
 
+// Los tests marcados "Nuevo" van primero.
 const homeTests: CatalogTest[] = [
-  ...catalogTests,
-  {
-    slug: "chantometro",
-    title: "CHANTOMETRO",
-    label: "Proximamente",
-    description: "Has pensado alguna vez si eres chanta o no? Compruébalo!",
-    status: "coming-soon",
-    theme: "Humor de tribus chilenas",
-    rankingDescription:
-      "El ranking se activara cuando el Chantómetro tenga test jugable y resultados publicos."
-  }
+  ...catalogTests.filter((item) => item.label === "Nuevo"),
+  ...catalogTests.filter((item) => item.label !== "Nuevo")
 ];
 
 function HeroTestItem({ item }: { item: CatalogTest }) {
@@ -62,7 +54,7 @@ function HeroTestItem({ item }: { item: CatalogTest }) {
         <div>
           <p
             className={`mb-2 inline-flex border-2 border-ink px-2 py-1 text-[11px] font-black uppercase ${
-              isAvailable ? "bg-mint" : "bg-paper"
+              item.label === "Nuevo" ? "bg-mustard" : isAvailable ? "bg-mint" : "bg-paper"
             }`}
           >
             {item.label}
@@ -111,7 +103,11 @@ function HeroTestItem({ item }: { item: CatalogTest }) {
 }
 
 export default function HomePage() {
-  const featured = tests[0];
+  // "Empezar ahora" lleva al test "Nuevo"; si no hay novedad, al Cuicómetro
+  // (el que más tráfico trae de Google).
+  const featuredSlug =
+    catalogTests.find((item) => item.label === "Nuevo")?.slug ?? "cuicometro";
+  const featured = getTestBySlug(featuredSlug) ?? tests[0];
   const featuredMemes = memes.slice(0, 6);
 
   return (
