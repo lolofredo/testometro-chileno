@@ -17,12 +17,12 @@ export const memeSections = [
   {
     title: "Cuicos y rituales sociales",
     description:
-      "Material para el futuro Cuicómetro: gestos, códigos, lugares comunes y humor de tribu."
+      "Gestos, códigos, lugares comunes y humor de tribu. Si te reconociste, el Cuicómetro te espera."
   },
   {
     title: "Archivo Testómetro",
     description:
-      "Piezas visuales para acompañar tests, rankings, resultados y momentos compartibles."
+      "Lo que circula en los grupos de WhatsApp después de cada test: para mirar, reírse y mandar."
   }
 ];
 
