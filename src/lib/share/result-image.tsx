@@ -164,13 +164,16 @@ export async function renderResultStory(shared: SharedResult) {
         <div
           style={{
             display: "flex",
-            justifyContent: "center",
-            marginBottom: 48,
-            color: colors.paper,
-            fontSize: 58
+            flexDirection: "column",
+            alignItems: "center",
+            marginBottom: 44,
+            color: colors.paper
           }}
         >
-          TESTÓMETRO CHILENO
+          <span style={{ fontSize: 58 }}>TESTÓMETRO CHILENO</span>
+          {/* Cuenta de Instagram: firma bajo la marca, lejos del resultado y
+              dentro de la zona que Instagram no tapa (sobre 250 px de margen). */}
+          <span style={{ fontSize: 36, marginTop: 8, opacity: 0.9 }}>@eltestometro</span>
         </div>
 
         <div
