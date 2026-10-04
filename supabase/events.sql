@@ -1,8 +1,8 @@
 -- Tabla de eventos de medición (Testómetro Chileno).
 -- Se pega una sola vez en Supabase: SQL Editor -> New query -> Run.
 -- Esquema completo actual. Si la tabla ya existía antes del evento por
--- bloque, correr events-002-block.sql y events-003-origin.sql en vez de
--- este archivo.
+-- bloque, correr events-002-block.sql, events-003-origin.sql y
+-- events-004-next-test.sql en vez de este archivo.
 -- Sin datos personales: ni nickname, ni respuestas. session_id es el código
 -- aleatorio del resultado (el mismo de /results/<session_id>).
 
@@ -16,7 +16,8 @@ create table if not exists events (
       'block_completed',
       'share_click',
       'shared_link_opened',
-      'shared_link_cta_click'
+      'shared_link_cta_click',
+      'next_test_click'
     )
   ),
   test_slug text not null check (test_slug ~ '^[a-z0-9-]{1,40}$'),

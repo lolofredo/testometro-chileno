@@ -49,6 +49,8 @@ function trackShare(input: ShareInput, channel: ShareChannel) {
   trackEvent("share_click", { testSlug: input.testSlug, sessionId: input.sessionId, channel });
 }
 
+const shareSectionId = "compartir";
+
 function getShareData({
   testSlug,
   testTitle,
@@ -67,8 +69,24 @@ function getShareData({
 }
 
 // Barra fija abajo en celular, para que WhatsApp quede a mano sin bajar.
+// Se oculta apenas aparece la sección de compartir, para no mostrar dos
+// botones de WhatsApp juntos.
 export function StickyWhatsAppBar(props: ShareInput) {
   const { whatsappHref } = getShareData(props);
+  const [shareSectionReached, setShareSectionReached] = useState(false);
+
+  useEffect(() => {
+    const section = document.getElementById(shareSectionId);
+    if (!section || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setShareSectionReached(entry.boundingClientRect.top < window.innerHeight);
+    });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  if (shareSectionReached) return null;
 
   return (
     <div className="sticky bottom-0 z-20 -mx-4 mt-8 border-t-4 border-ink bg-paper p-3 sm:hidden">
@@ -160,7 +178,10 @@ export function ShareButtons(props: ShareInput) {
     "focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-white px-4 py-3 text-sm font-black uppercase";
 
   return (
-    <section className="mt-6 border-4 border-ink bg-paper p-4 shadow-[8px_8px_0_#17120f] sm:p-6">
+    <section
+      className="mt-6 border-4 border-ink bg-paper p-4 shadow-[8px_8px_0_#17120f] sm:p-6"
+      id={shareSectionId}
+    >
       <p className="mb-3 text-center text-lg font-black uppercase sm:text-xl">
         Compártelo y desafía a tus amigos
       </p>

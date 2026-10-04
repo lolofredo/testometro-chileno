@@ -11,7 +11,8 @@ export type EventName =
   | "block_completed"
   | "share_click"
   | "shared_link_opened"
-  | "shared_link_cta_click";
+  | "shared_link_cta_click"
+  | "next_test_click";
 
 export type ShareChannel = "whatsapp" | "native" | "x" | "copy" | "story";
 

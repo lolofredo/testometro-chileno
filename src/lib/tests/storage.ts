@@ -113,6 +113,22 @@ export function completeSession(session: StoredSession) {
   return nextSession;
 }
 
+// Tests que esta persona ya terminó en este celular (para recomendar otro).
+export function getCompletedTestSlugs() {
+  const slugs = new Set<string>();
+  try {
+    for (let index = 0; index < window.localStorage.length; index += 1) {
+      const key = window.localStorage.key(index);
+      if (!key?.startsWith(sessionPrefix)) continue;
+      const session = JSON.parse(window.localStorage.getItem(key) ?? "null") as StoredSession | null;
+      if (session?.completedAt) slugs.add(session.testSlug);
+    }
+  } catch {
+    // Sin localStorage se recomienda igual, sin saber qué hizo.
+  }
+  return slugs;
+}
+
 export function getLeaderboard(testSlug: string) {
   const raw = window.localStorage.getItem(`${leaderboardPrefix}${testSlug}`);
   return raw ? (JSON.parse(raw) as LeaderboardEntry[]) : [];

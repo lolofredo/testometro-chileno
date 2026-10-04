@@ -4,12 +4,30 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, RotateCcw, Trophy } from "lucide-react";
 import { ResultCard } from "./ResultCard";
+import { NextTestCard } from "./NextTestCard";
 import { ShareButtons, StickyWhatsAppBar } from "./ShareButtons";
 import type { StoredSession } from "@/lib/tests/types";
 import { getTestBySlug, tests } from "@/data/tests";
-import { getInvitation } from "@/lib/share/share-copy";
+import { getTestHeadline } from "@/lib/share/share-copy";
 import { calculateScore, getResultRange } from "@/lib/tests/scoring";
-import { getStoredSession } from "@/lib/tests/storage";
+import { getCompletedTestSlugs, getStoredSession } from "@/lib/tests/storage";
+import { getFeaturedTest } from "@/lib/tests/featured";
+import type { TestDefinition } from "@/lib/tests/types";
+
+// Siguiente test: primero el destacado, después los más cortos (el Original,
+// de 150 preguntas, al final), sin repetir el actual y prefiriendo uno que la
+// persona no haya terminado.
+function pickNextTest(currentSlug: string) {
+  const featured = getFeaturedTest();
+  const others = tests
+    .filter((item) => item.slug !== featured.slug)
+    .sort((a, b) => a.questions.length - b.questions.length);
+  const candidates = [featured, ...others].filter((item) => item.slug !== currentSlug);
+  const completed = getCompletedTestSlugs();
+  const notDone = candidates.find((item) => !completed.has(item.slug));
+  if (notDone) return { test: notDone, alreadyDidAll: false };
+  return candidates[0] ? { test: candidates[0], alreadyDidAll: true } : null;
+}
 
 export function ResultView({
   sessionId
@@ -18,10 +36,15 @@ export function ResultView({
 }) {
   const [session, setSession] = useState<StoredSession | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [nextTest, setNextTest] = useState<{ test: TestDefinition; alreadyDidAll: boolean } | null>(
+    null
+  );
 
   useEffect(() => {
-    setSession(getStoredSession(sessionId));
+    const stored = getStoredSession(sessionId);
+    setSession(stored);
     setLoaded(true);
+    if (stored) setNextTest(pickNextTest(stored.testSlug));
   }, [sessionId]);
 
   const test = session ? getTestBySlug(session.testSlug) : undefined;
@@ -56,7 +79,7 @@ export function ResultView({
             >
               <span>
                 <span className="block text-base leading-tight">
-                  {getInvitation(item.slug, item.title).question.replace(/^¿Y tú /, "¿")}
+                  {getTestHeadline(item.slug, item.title)}
                 </span>
                 <span className="block text-xs text-ink/60">{item.title}</span>
               </span>
@@ -87,20 +110,28 @@ export function ResultView({
         sessionId={session.sessionId}
       />
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      {nextTest ? (
+        <NextTestCard
+          alreadyDidAll={nextTest.alreadyDidAll}
+          nextTest={nextTest.test}
+          sessionId={session.sessionId}
+        />
+      ) : null}
+
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-black uppercase">
         <Link
-          className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-white px-5 py-3 text-sm font-black uppercase"
+          className="focus-ring inline-flex min-h-11 items-center gap-2 underline decoration-2 underline-offset-4"
           href={`/rankings#ranking-${test.slug}`}
         >
-          <Trophy size={18} strokeWidth={3} />
+          <Trophy size={16} strokeWidth={3} />
           Ver ranking
         </Link>
         <Link
-          className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-3 text-sm font-black uppercase text-paper"
+          className="focus-ring inline-flex min-h-11 items-center gap-2 underline decoration-2 underline-offset-4"
           href={`/tests/${test.slug}/start`}
         >
-          <RotateCcw size={18} strokeWidth={3} />
-          Repetir test
+          <RotateCcw size={16} strokeWidth={3} />
+          Repetir este test
         </Link>
       </div>
 

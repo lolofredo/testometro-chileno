@@ -96,3 +96,30 @@ select
 from empezados e
 group by origen, campana
 order by empezaron desc;
+
+-- 6. Siguiente test: desde el resultado de cada test, cuántas personas
+-- tocaron la tarjeta "Siguiente test" y hacia cuál.
+select
+  coalesce(origen.test_slug, '?') as desde,
+  e.test_slug as hacia,
+  count(distinct e.session_id) as personas,
+  round(
+    100.0 * count(distinct e.session_id) / nullif(max(t.terminados), 0),
+    1
+  ) as pct_de_los_que_terminaron
+from events e
+left join lateral (
+  select s.test_slug from events s
+  where s.session_id = e.session_id and s.event = 'test_completed'
+  limit 1
+) origen on true
+left join (
+  select test_slug, count(distinct session_id) as terminados
+  from events
+  where event = 'test_completed' and created_at > now() - interval '30 days'
+  group by test_slug
+) t on t.test_slug = origen.test_slug
+where e.event = 'next_test_click'
+  and e.created_at > now() - interval '30 days'
+group by 1, 2
+order by personas desc;

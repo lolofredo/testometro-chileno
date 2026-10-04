@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { getInvitation } from "@/lib/share/share-copy";
+import { getInvitation, getTestHeadline } from "@/lib/share/share-copy";
 import { getFeaturedTest } from "@/lib/tests/featured";
 
 export default function NotFound() {
@@ -20,7 +20,7 @@ export default function NotFound() {
 
         <div className="mt-6 border-4 border-ink bg-mustard p-5">
           <p className="text-2xl font-black uppercase leading-none sm:text-3xl">
-            {invitation.question.replace(/^¿Y tú /, "¿")}
+            {getTestHeadline(featured.slug, featured.title)}
           </p>
           <Link
             className="focus-ring mt-4 inline-flex w-full items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-4 text-sm font-black uppercase text-paper shadow-[5px_5px_0_#17120f] sm:w-auto"
