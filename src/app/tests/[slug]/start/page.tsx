@@ -12,7 +12,9 @@ export const metadata: Metadata = {
   robots: {
     index: false,
     follow: true
-  }
+  },
+  // Sin canónica propia: si no, hereda la de la home desde el layout.
+  alternates: { canonical: null }
 };
 
 export default async function StartPage({ params }: PageProps) {

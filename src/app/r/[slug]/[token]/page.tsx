@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const robots = { index: false, follow: false };
 
   if (!shared) {
-    return { title: "Resultado no encontrado", robots };
+    return { title: "Resultado no encontrado", robots, alternates: { canonical: null } };
   }
 
   const { test, score, nickname, result } = shared;
@@ -37,6 +37,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     robots,
+    // Canónica sin parámetros utm (los links compartidos los traen). Sin
+    // esto la página heredaría la canónica de la home.
+    alternates: { canonical: absoluteUrl(path) },
     openGraph: {
       title,
       description,

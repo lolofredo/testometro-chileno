@@ -15,6 +15,7 @@ Sitio https://testometro.cl: tests de humor y cultura popular chilena. Next.js 1
 - Nada con costo sin preguntar: ni planes pagados, ni servicios nuevos, ni dependencias de pago.
 - No mostrar en el chat valores de claves ni de archivos `.env`; solo nombrar las variables.
 - Títulos de página: el layout ya agrega " | Testómetro Chileno"; no repetirlo en el `title` de cada página.
+- Canónica: el layout declara la home como canónica y toda página que no defina `alternates.canonical` la hereda. Las páginas indexables declaran su propia ruta (sin parámetros utm); las `/r/` también (su ruta sin parámetros); las que no se indexan (start, play, results) usan `alternates: { canonical: null }`.
 
 ## Comandos
 - `npm run dev`: desarrollo local (http://localhost:3000)
