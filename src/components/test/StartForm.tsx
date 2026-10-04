@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import type { TestDefinition } from "@/lib/tests/types";
+import { getDurationLabel } from "@/lib/tests/duration";
 import { arrivedFromShare, trackEvent } from "@/lib/analytics/events";
 import { getVisitOrigin } from "@/lib/analytics/origin";
 import {
@@ -57,7 +58,7 @@ export function StartForm({ test }: { test: TestDefinition }) {
     <div className="mx-auto max-w-2xl border-4 border-ink bg-paper p-5 shadow-[8px_8px_0_#17120f] sm:p-7">
       <div className="mb-6">
         <p className="mb-2 text-xs font-black uppercase text-tomato">
-          Antes de empezar
+          {test.title} · {test.questions.length} preguntas · {getDurationLabel(test)}
         </p>
         <h1 className="text-3xl font-black uppercase leading-none sm:text-5xl">
           Identifícate para el marcador

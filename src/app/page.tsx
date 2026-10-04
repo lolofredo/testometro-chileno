@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Clock, Images, Play } from "lucide-react";
-import { getTestBySlug, tests } from "@/data/tests";
+import { getInvitation, getTestHeadline } from "@/lib/share/share-copy";
+import { getDurationLabel, getEstimatedMinutesForCount } from "@/lib/tests/duration";
+import { getFeaturedTest } from "@/lib/tests/featured";
 import { catalogTests, type CatalogTest } from "@/data/test-catalog";
 import { memes } from "@/data/memes";
 import { absoluteUrl, siteConfig, siteOgImage } from "@/lib/seo";
@@ -84,7 +86,7 @@ function HeroTestItem({ item }: { item: CatalogTest }) {
             {item.questionCount} preguntas
           </span>
           <span className="border-2 border-ink bg-paper px-2 py-1">
-            {item.blocks} bloques
+            {getEstimatedMinutesForCount(item.questionCount)} min
           </span>
         </div>
       ) : null}
@@ -103,41 +105,51 @@ function HeroTestItem({ item }: { item: CatalogTest }) {
 }
 
 export default function HomePage() {
-  // "Empezar ahora" lleva al test "Nuevo"; si no hay novedad, al Cuicómetro
-  // (el que más tráfico trae de Google).
-  const featuredSlug =
-    catalogTests.find((item) => item.label === "Nuevo")?.slug ?? "cuicometro";
-  const featured = getTestBySlug(featuredSlug) ?? tests[0];
+  // El test destacado ("Nuevo"; si no hay, el Cuicómetro) va en la primera pantalla.
+  const featured = getFeaturedTest();
+  const featuredInvitation = getInvitation(featured.slug, featured.title);
+  const featuredLabel =
+    catalogTests.find((item) => item.slug === featured.slug)?.label === "Nuevo" ? "Nuevo" : "Destacado";
   const featuredMemes = memes.slice(0, 6);
 
   return (
     <div className="px-4 py-8 sm:px-6 sm:py-10">
       <section className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-start">
         <div>
-          <p className="mb-3 inline-flex border-4 border-ink bg-mustard px-3 py-2 text-xs font-black uppercase shadow-[4px_4px_0_#17120f]">
-            Testea tu cultura popular chilena
-          </p>
-          <h1 className="headline-shadow mb-5 text-4xl font-black uppercase leading-none sm:text-7xl lg:text-8xl">
+          <h1 className="headline-shadow text-4xl font-black uppercase leading-none sm:text-6xl lg:text-7xl">
             Testómetro Chileno
           </h1>
-          <p className="max-w-2xl text-lg font-bold leading-relaxed text-ink/80">
-            El Testómetro es una plataforma de humor chileno y cultura popular chilena, con tests sobre chilenidad, memes, nostalgia, internet antiguo, deporte, farándula, prejuicios sociales y rarezas del Chile actual. 
+          <p className="mt-3 max-w-2xl text-lg font-bold leading-snug text-ink/80">
+            Tests chilenos de humor. Sí o no, 3 minutos, sin registro.
           </p>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Link
-              className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-3 text-sm font-black uppercase text-paper shadow-[5px_5px_0_#17120f]"
-              href={`/tests/${featured.slug}/start`}
-            >
-              Empezar ahora
-              <ArrowRight size={18} strokeWidth={3} />
-            </Link>
-            <Link
-              className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-white px-5 py-3 text-sm font-black uppercase"
-              href="/tests"
-            >
-              Ver tests
-            </Link>
+
+          <div className="mt-5 border-4 border-ink bg-white shadow-[8px_8px_0_#17120f]">
+            <div className="p-5">
+              <p className="mb-3 inline-flex border-2 border-ink bg-mustard px-2 py-1 text-[11px] font-black uppercase">
+                {featuredLabel} · {featured.title}
+              </p>
+              <p className="text-3xl font-black uppercase leading-none sm:text-5xl">
+                {getTestHeadline(featured.slug, featured.title)}
+              </p>
+              <p className="mt-2 text-sm font-bold text-ink/70">
+                {featured.questions.length} preguntas de sí o no · {getDurationLabel(featured)}
+              </p>
+              <Link
+                className="focus-ring mt-4 flex w-full items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-4 text-base font-black uppercase text-paper shadow-[5px_5px_0_#17120f] sm:w-auto sm:px-8"
+                href={`/tests/${featured.slug}/start`}
+              >
+                {featuredInvitation.cta}
+                <ArrowRight size={20} strokeWidth={3} />
+              </Link>
+            </div>
           </div>
+          <Link
+            className="focus-ring mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-black uppercase underline decoration-2 underline-offset-4"
+            href="/tests"
+          >
+            Ver todos los tests
+            <ArrowRight size={16} strokeWidth={3} />
+          </Link>
 
         </div>
 
@@ -204,6 +216,13 @@ export default function HomePage() {
             </div>
           </Link>
         </div>
+      </section>
+
+      <section className="mx-auto mt-10 max-w-6xl">
+        <h2 className="mb-2 text-sm font-black uppercase text-ink/60">Sobre el Testómetro</h2>
+        <p className="max-w-3xl text-sm font-semibold leading-relaxed text-ink/70">
+          El Testómetro es una plataforma de humor chileno y cultura popular chilena, con tests sobre chilenidad, memes, nostalgia, internet antiguo, deporte, farándula, prejuicios sociales y rarezas del Chile actual.
+        </p>
       </section>
     </div>
   );

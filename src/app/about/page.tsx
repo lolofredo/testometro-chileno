@@ -28,9 +28,10 @@ export default function AboutPage() {
           Archivo jugable
         </h1>
         <p className="mb-4 font-semibold leading-relaxed text-ink/80">
-          Testómetro Chileno es una plataforma para convertir tests de cultura
-          popular chilena en experiencias web responsive, preservando su contexto
-          y preparando la base para nuevas versiones.
+          Testómetro Chileno es un sitio de tests de humor sobre Chile: preguntas
+          de sí o no, resultados para compartir y rankings. Partió rescatando el
+          Rotómetro, un clásico del internet chileno de los 2000, y hoy suma tests
+          nuevos sobre cómo somos.
         </p>
         <p className="mb-4 font-semibold leading-relaxed text-ink/80">
           Tus respuestas se guardan de forma anónima, sin tu nickname, para estadísticas que solo se publican como totales.

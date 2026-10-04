@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Clock, Trophy } from "lucide-react";
 import { getTestBySlug } from "@/data/tests";
+import { getDurationLabel } from "@/lib/tests/duration";
 import { getCatalogTestBySlug } from "@/data/test-catalog";
 import {
   getCatalogTestMetadata,
@@ -120,18 +121,13 @@ export default async function TestDetailPage({ params }: PageProps) {
             {test.description}
           </p>
 
-          <div className="mb-6 border-4 border-ink bg-white p-4">
-            <p className="text-sm font-black uppercase text-tomato">
-              Contexto editorial
-            </p>
-            <p className="mt-2 font-semibold leading-relaxed text-ink/80">
-              {test.disclaimer}
-            </p>
-          </div>
+          <p className="-mt-2 mb-5 text-sm font-black uppercase text-ink/70">
+            {test.questions.length} preguntas · Sí o no · {getDurationLabel(test)}
+          </p>
 
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
-              className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-3 text-sm font-black uppercase text-paper shadow-[5px_5px_0_#17120f]"
+              className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-4 text-base font-black uppercase text-paper shadow-[5px_5px_0_#17120f] sm:py-3 sm:text-sm"
               href={`/tests/${test.slug}/start`}
             >
               Empezar test
@@ -144,6 +140,15 @@ export default async function TestDetailPage({ params }: PageProps) {
               <Trophy size={18} strokeWidth={3} />
               Ver ranking
             </Link>
+          </div>
+
+          <div className="mt-6 border-4 border-ink bg-white p-4">
+            <p className="text-sm font-black uppercase text-tomato">
+              Contexto editorial
+            </p>
+            <p className="mt-2 font-semibold leading-relaxed text-ink/80">
+              {test.disclaimer}
+            </p>
           </div>
         </div>
 
@@ -159,8 +164,8 @@ export default async function TestDetailPage({ params }: PageProps) {
               <dd>Sí / No</dd>
             </div>
             <div className="flex justify-between gap-4 border-b-2 border-ink/30 pb-2">
-              <dt>Bloques</dt>
-              <dd>10 preguntas</dd>
+              <dt>Duración</dt>
+              <dd>{getDurationLabel(test)} aprox.</dd>
             </div>
             <div className="flex justify-between gap-4">
               <dt>Versión</dt>

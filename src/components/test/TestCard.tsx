@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, ClipboardList } from "lucide-react";
 import type { TestDefinition } from "@/lib/tests/types";
+import { getDurationLabel } from "@/lib/tests/duration";
 
 export function TestCard({ test }: { test: TestDefinition }) {
   return (
@@ -23,13 +24,9 @@ export function TestCard({ test }: { test: TestDefinition }) {
         {test.subtitle}
       </p>
 
-      <div className="mb-5 grid grid-cols-3 border-4 border-ink text-center text-sm font-black uppercase">
-        <span className="border-r-4 border-ink bg-white px-2 py-3">
-          {test.questions.length} preguntas
-        </span>
-        <span className="border-r-4 border-ink bg-white px-2 py-3">Sí / No</span>
-        <span className="bg-white px-2 py-3">Ranking</span>
-      </div>
+      <p className="mb-5 border-y-2 border-ink/30 py-2 text-sm font-black uppercase">
+        {test.questions.length} preguntas · Sí o no · {getDurationLabel(test)}
+      </p>
 
       <Link
         className="focus-ring inline-flex w-full items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-3 text-center text-sm font-black uppercase text-paper shadow-[5px_5px_0_#17120f] transition hover:-translate-y-0.5 hover:shadow-[7px_7px_0_#17120f]"
