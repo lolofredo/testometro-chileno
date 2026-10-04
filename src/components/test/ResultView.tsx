@@ -57,6 +57,7 @@ export function ResultView({
         testSlug={test.slug}
         testTitle={test.title}
         resultTitle={resultData.result.title}
+        sharePhrase={resultData.result.shareText}
         score={resultData.score}
         nickname={session.nickname}
         sessionId={session.sessionId}
@@ -83,6 +84,7 @@ export function ResultView({
         testSlug={test.slug}
         testTitle={test.title}
         resultTitle={resultData.result.title}
+        sharePhrase={resultData.result.shareText}
         score={resultData.score}
         nickname={session.nickname}
         sessionId={session.sessionId}

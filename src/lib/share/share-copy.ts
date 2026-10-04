@@ -28,12 +28,22 @@ export function getInvitation(testSlug: string, testTitle: string) {
   );
 }
 
+// Tests cuyo `shareText` de cada grupo es una frase escrita para compartir.
+// Los demás tienen "Obtuve X en el Y" y usan el formato general.
+const testsWithSharePhrases = new Set(["chantometro"]);
+
 export function getShareText(input: {
   testSlug: string;
   testTitle: string;
   resultTitle: string;
+  sharePhrase: string;
   score: number;
 }) {
   const { question } = getInvitation(input.testSlug, input.testTitle);
+
+  if (testsWithSharePhrases.has(input.testSlug)) {
+    return `«${input.sharePhrase}» Saqué ${input.score} en el ${input.testTitle} 😅 ${question}`;
+  }
+
   return `Me salió «${input.resultTitle}» (${input.score} pts) en el ${input.testTitle} 😅 ${question}`;
 }

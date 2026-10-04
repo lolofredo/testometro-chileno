@@ -31,6 +31,7 @@ type ShareInput = {
   testSlug: string;
   testTitle: string;
   resultTitle: string;
+  sharePhrase: string;
   score: number;
   nickname: string;
   sessionId: string;
@@ -40,9 +41,16 @@ function trackShare(input: ShareInput, channel: ShareChannel) {
   trackEvent("share_click", { testSlug: input.testSlug, sessionId: input.sessionId, channel });
 }
 
-function getShareData({ testSlug, testTitle, resultTitle, score, nickname }: ShareInput) {
+function getShareData({
+  testSlug,
+  testTitle,
+  resultTitle,
+  sharePhrase,
+  score,
+  nickname
+}: ShareInput) {
   const shareUrl = absoluteUrl(getSharePath(testSlug, score, nickname));
-  const shareText = getShareText({ testSlug, testTitle, resultTitle, score });
+  const shareText = getShareText({ testSlug, testTitle, resultTitle, sharePhrase, score });
   return { shareUrl, shareText, whatsappHref: getWhatsAppHref(shareText, shareUrl) };
 }
 
