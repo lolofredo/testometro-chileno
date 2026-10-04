@@ -42,5 +42,6 @@ Sitio https://testometro.cl: tests de humor y cultura popular chilena. Next.js 1
 - Progreso, resultados y ranking local viven en `localStorage` (`testometro:session:*`, `testometro:active:*`, `testometro:leaderboard:*`). Los links `/results/...` solo funcionan en el navegador donde se hizo el test.
 - Ranking global: Supabase, tabla `leaderboard_entries`, leída y escrita desde el navegador con la clave pública. Se escribe solo si la persona marca "Aparecer en ranking público".
 - Variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, opcional `NEXT_PUBLIC_SITE_URL`. Quedan fijas al compilar: si cambian en Vercel, hay que redesplegar.
+- Supabase gratis se pausa tras 7 días sin actividad: `vercel.json` programa un Vercel Cron diario a `/api/keepalive` (`src/app/api/keepalive/route.ts`), que hace una consulta mínima a `leaderboard_entries`. Abrir https://testometro.cl/api/keepalive debe responder `{"ok":true,...}`.
 - Si faltan o Supabase no responde, la app vuelve sin aviso al ranking local ("Ranking local de este navegador…").
 - Riesgo conocido: cualquiera puede insertar puntajes o nicknames falsos (sin validación ni límite de envíos).
