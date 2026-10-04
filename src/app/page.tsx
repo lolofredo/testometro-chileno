@@ -176,7 +176,7 @@ export default function HomePage() {
           </div>
 
           <Link
-            aria-label="Ver la galeria completa de memes"
+            aria-label="Ver la galería completa de memes"
             className="focus-ring group block"
             href="/memes"
           >

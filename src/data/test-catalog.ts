@@ -26,7 +26,7 @@ export const catalogTests: CatalogTest[] = [
       "Revive la reliquia original de los años 2000 del internet chileno.",
     theme: "Archivo pop chileno",
     rankingDescription:
-      "Ranking publico del Rotómetro Original, conectado a los resultados que la gente decide publicar.",
+      "Ranking público del Rotómetro Original, conectado a los resultados que la gente decide publicar.",
     status: "available",
     questionCount: rotometroOriginal.questions.length,
     blocks: 15,
@@ -41,7 +41,7 @@ export const catalogTests: CatalogTest[] = [
       "Prueba tu nivel de rotería, actualizado al Chile digital actual.",
     theme: "Chile digital actual",
     rankingDescription:
-      "Ranking publico del Rotómetro 2.0, conectado a los resultados que la gente decide publicar.",
+      "Ranking público del Rotómetro 2.0, conectado a los resultados que la gente decide publicar.",
     status: "available",
     questionCount: rotometro2.questions.length,
     blocks: 5,
@@ -53,10 +53,10 @@ export const catalogTests: CatalogTest[] = [
     title: cuicometro.title,
     label: "Disponible",
     description:
-      "Qué tan cuico crees que eres? Te podrías sorprender.",
+      "¿Qué tan cuico crees que eres? Te podrías sorprender.",
     theme: "Humor de tribus chilenas",
     rankingDescription:
-      "Ranking publico del Cuicómetro, conectado a los resultados que la gente decide publicar.",
+      "Ranking público del Cuicómetro, conectado a los resultados que la gente decide publicar.",
     status: "available",
     questionCount: cuicometro.questions.length,
     blocks: 5,
@@ -72,7 +72,7 @@ export const catalogTests: CatalogTest[] = [
     description: chantometro.description,
     theme: "Humor de tribus chilenas",
     rankingDescription:
-      "Ranking publico del Chantómetro, conectado a los resultados que la gente decide publicar.",
+      "Ranking público del Chantómetro, conectado a los resultados que la gente decide publicar.",
     status: "available",
     questionCount: chantometro.questions.length,
     blocks: 5,

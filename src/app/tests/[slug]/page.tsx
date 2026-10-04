@@ -54,9 +54,9 @@ export default async function TestDetailPage({ params }: PageProps) {
                 En desarrollo
               </p>
               <p className="mt-2 font-semibold leading-relaxed text-ink/80">
-                Esta pagina ya existe para que la arquitectura del Testómetro
+                Esta página ya existe para que la arquitectura del Testómetro
                 pueda crecer ordenada. Las preguntas, resultados y ranking se
-                activaran cuando publiquemos el test completo.
+                activarán cuando publiquemos el test completo.
               </p>
             </div>
 
@@ -65,7 +65,7 @@ export default async function TestDetailPage({ params }: PageProps) {
                 className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-white px-5 py-3 text-sm font-black uppercase"
                 href="/tests"
               >
-                Ver catalogo
+                Ver catálogo
               </Link>
               <Link
                 className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-mustard px-5 py-3 text-sm font-black uppercase"
@@ -163,7 +163,7 @@ export default async function TestDetailPage({ params }: PageProps) {
               <dd>10 preguntas</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt>Version</dt>
+              <dt>Versión</dt>
               <dd>{test.version}</dd>
             </div>
           </dl>

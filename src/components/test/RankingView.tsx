@@ -65,22 +65,22 @@ export function RankingView({
     <section className="mx-auto max-w-5xl">
       <div className="mb-6 border-4 border-ink bg-paper p-5 shadow-[8px_8px_0_#17120f]">
         <p className="mb-2 text-xs font-black uppercase text-tomato">
-          Marcador publico
+          Marcador público
         </p>
         <Heading className="text-3xl font-black uppercase leading-none sm:text-6xl">
           {title ?? `Ranking ${test.title}`}
         </Heading>
         <p className="mt-3 max-w-2xl font-semibold text-ink/75">
           {source === "global"
-            ? "Ranking global conectado a Supabase."
-            : "Ranking local de este navegador. Al configurar Supabase, esta vista mostrara el ranking global."}
+            ? "Los mejores puntajes de quienes eligieron aparecer."
+            : "Mostrando solo los resultados de este celular."}
         </p>
       </div>
 
       {entries.length === 0 ? (
         <div className="border-4 border-ink bg-white p-6 text-center shadow-[8px_8px_0_#17120f]">
           <p className="mb-4 text-xl font-black uppercase">
-            Todavia no hay resultados publicos
+            Todavía no hay resultados públicos
           </p>
           <Link
             className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-3 text-sm font-black uppercase text-paper"

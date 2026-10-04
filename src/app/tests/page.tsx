@@ -53,7 +53,7 @@ function ComingSoonCard({
       href={href}
     >
       <p className="mb-2 inline-flex border-2 border-ink bg-paper px-2 py-1 text-xs font-black uppercase">
-        Proximamente
+        Próximamente
       </p>
       <h2 className="mb-3 text-2xl font-black uppercase leading-none">{title}</h2>
       <p className="text-base font-semibold leading-relaxed text-ink/70">
@@ -71,7 +71,7 @@ export default function TestsPage() {
       <section className="mx-auto max-w-6xl">
         <div className="mb-8">
           <p className="mb-2 text-xs font-black uppercase text-tomato">
-            Catalogo
+            Catálogo
           </p>
           <h1 className="text-5xl font-black uppercase leading-none">
             Tests disponibles

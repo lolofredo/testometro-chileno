@@ -27,7 +27,7 @@ export function StartForm({ test }: { test: TestDefinition }) {
   }, [test.slug]);
 
   function startTest() {
-    const cleanNickname = nickname.trim().slice(0, 32) || "Anonimo";
+    const cleanNickname = nickname.trim().slice(0, 32) || "Anónimo";
     const fromShare = arrivedFromShare();
     const origin = getVisitOrigin();
     const session = createStoredSession({
@@ -60,7 +60,7 @@ export function StartForm({ test }: { test: TestDefinition }) {
           Antes de empezar
         </p>
         <h1 className="text-3xl font-black uppercase leading-none sm:text-5xl">
-          Identificate para el marcador
+          Identifícate para el marcador
         </h1>
       </div>
 
@@ -95,10 +95,10 @@ export function StartForm({ test }: { test: TestDefinition }) {
         />
         <span>
           <span className="block text-sm font-black uppercase">
-            Aparecer en ranking publico
+            Aparecer en ranking público
           </span>
           <span className="block text-sm font-semibold text-ink/70">
-            Si lo activas, se mostrara tu nickname, puntaje, grupo y fecha.
+            Si lo activas, se mostrará tu nickname, puntaje, grupo y fecha.
           </span>
         </span>
       </label>

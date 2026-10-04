@@ -31,7 +31,7 @@ export function QuestionRow({
           type="button"
           onClick={() => onAnswer("yes")}
         >
-          Si
+          Sí
         </button>
         <button
           aria-pressed={value === "no"}

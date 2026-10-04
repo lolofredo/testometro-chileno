@@ -33,7 +33,7 @@ export function ResultView({
   if (!session || !test || !resultData) {
     return (
       <div className="mx-auto max-w-2xl border-4 border-ink bg-paper p-6 text-center shadow-[8px_8px_0_#17120f]">
-        <p className="mb-4 text-xl font-black uppercase">No encontre este resultado</p>
+        <p className="mb-4 text-xl font-black uppercase">No encontré este resultado</p>
         <Link
           className="focus-ring inline-flex border-4 border-ink bg-tomato px-5 py-3 text-sm font-black uppercase text-paper"
           href="/tests"

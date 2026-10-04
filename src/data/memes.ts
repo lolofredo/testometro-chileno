@@ -17,7 +17,7 @@ export const memeSections = [
   {
     title: "Cuicos y rituales sociales",
     description:
-      "Material para el futuro Cuicómetro: gestos, codigos, lugares comunes y humor de tribu."
+      "Material para el futuro Cuicómetro: gestos, códigos, lugares comunes y humor de tribu."
   },
   {
     title: "Archivo Testómetro",
@@ -49,21 +49,21 @@ export const memes: MemeItem[] = [
   },
   {
     slug: "si-saben-como-me-pongo",
-    title: "Si saben como me pongo",
+    title: "Si saben cómo me pongo",
     imageSrc: "/memes/meme-3.png",
-    alt: "Meme chileno con Arturo Vidal y el texto si saben como me pongo pa que me dejan salir.",
+    alt: "Meme chileno con Arturo Vidal y el texto si saben cómo me pongo pa que me dejan salir.",
     description:
-      "Clasico de energia post-carrete, futbol, calle y excusas que nacen listas para compartirse.",
+      "Clásico de energía post-carrete, fútbol, calle y excusas que nacen listas para compartirse.",
     tags: ["rotos", "futbol", "carrete"],
     publishedAt: "2026-05-24"
   },
   {
     slug: "subele-sin-audifonos",
-    title: "Subele sin audifonos",
+    title: "Súbele sin audífonos",
     imageSrc: "/memes/meme-4.jpg",
-    alt: "Meme de Drake sobre usar audifonos versus escuchar musica fuerte sin molestar.",
+    alt: "Meme de Drake sobre usar audífonos versus escuchar música fuerte sin molestar.",
     description:
-      "La banda sonora involuntaria del transporte publico, la plaza y cualquier sala de espera chilena.",
+      "La banda sonora involuntaria del transporte público, la plaza y cualquier sala de espera chilena.",
     tags: ["rotos", "musica", "convivencia"],
     publishedAt: "2026-05-24"
   },
@@ -83,7 +83,7 @@ export const memes: MemeItem[] = [
     imageSrc: "/memes/meme-6.jpg",
     alt: "Meme chileno sobre compartir funas sin leerlas.",
     description:
-      "Opinión publica express: compartir primero, leer después, matizar nunca.",
+      "Opinión pública express: compartir primero, leer después, matizar nunca.",
     tags: ["chilenos", "redes sociales", "copuchas"],
     publishedAt: "2026-05-24"
   }

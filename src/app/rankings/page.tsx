@@ -45,14 +45,14 @@ export default function RankingsPage() {
       <section className="mx-auto max-w-6xl">
         <div className="mb-8 border-4 border-ink bg-paper p-5 shadow-[8px_8px_0_#17120f] sm:p-8">
           <p className="mb-3 text-xs font-black uppercase text-tomato">
-            Marcadores publicos
+            Marcadores públicos
           </p>
           <h1 className="headline-shadow text-4xl font-black uppercase leading-none sm:text-7xl">
             Rankings
           </h1>
           <p className="mt-5 max-w-3xl text-lg font-bold leading-relaxed text-ink/80">
-            El salon de la fama del Testómetro Chileno. Elige un test y baja
-            directo a su ranking publico, sin salir de esta pagina.
+            El salón de la fama del Testómetro Chileno. Elige un test y baja
+            directo a su ranking público, sin salir de esta página.
           </p>
         </div>
 

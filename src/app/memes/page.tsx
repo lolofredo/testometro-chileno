@@ -83,10 +83,10 @@ export default function MemesPage() {
               Primera tanda en preparacion
             </p>
             <h2 className="mx-auto max-w-3xl text-3xl font-black uppercase leading-none sm:text-4xl">
-              Aqui vivira la galeria de memes del Testómetro
+              Aquí vivirá la galería de memes del Testómetro
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base font-bold leading-relaxed text-ink/75">
-              La estructura ya esta lista para publicar memes por colecciones,
+              La estructura ya está lista para publicar memes por colecciones,
               tags y fechas, manteniendo el estilo de archivo pop chileno.
             </p>
           </div>

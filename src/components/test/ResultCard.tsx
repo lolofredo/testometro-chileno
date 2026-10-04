@@ -15,7 +15,7 @@ export function ResultCard({
     <section className="paper-noise overflow-hidden border-4 border-ink bg-paper shadow-[10px_10px_0_#17120f]">
       <div className="relative border-b-4 border-ink bg-tomato px-5 py-3 text-paper">
         <p className="text-center text-sm font-black uppercase tracking-normal">
-          Ultimo minuto
+          Último minuto
         </p>
       </div>
       <div className="relative p-5 sm:p-8">
