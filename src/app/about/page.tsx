@@ -3,7 +3,7 @@ import Link from "next/link";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Sobre el proyecto | Testómetro Chileno",
+  title: "Sobre el proyecto",
   description:
     "Testómetro Chileno es un archivo jugable de tests chilenos, humor, cultura popular chilena, memes y nostalgia digital.",
   keywords: [

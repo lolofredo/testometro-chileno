@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { siteConfig } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export const metadata: Metadata = {
-  title: `Ranking | ${siteConfig.name}`,
+  title: "Ranking",
   robots: {
     index: false,
     follow: true

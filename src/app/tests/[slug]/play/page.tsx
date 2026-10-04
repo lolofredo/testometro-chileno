@@ -3,14 +3,13 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getTestBySlug } from "@/data/tests";
 import { TestPlayer } from "@/components/test/TestPlayer";
-import { siteConfig } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export const metadata: Metadata = {
-  title: `Responder test | ${siteConfig.name}`,
+  title: "Responder test",
   robots: {
     index: false,
     follow: true

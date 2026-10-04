@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, Share2 } from "lucide-react";
+import { Copy, Instagram, Share2 } from "lucide-react";
 import { absoluteUrl } from "@/lib/seo";
 import { getSharePath } from "@/lib/share/result-link";
 import { getShareText } from "@/lib/share/share-copy";
@@ -68,6 +68,8 @@ export function ShareButtons({
 }: ShareInput) {
   const [copied, setCopied] = useState(false);
   const [canNativeShare, setCanNativeShare] = useState(false);
+  const [storyFile, setStoryFile] = useState<File | null>(null);
+  const [storyHint, setStoryHint] = useState(false);
 
   const { shareUrl, shareText, whatsappHref } = getShareData({
     testSlug,
@@ -77,10 +79,45 @@ export function ShareButtons({
     nickname
   });
   const sharePath = new URL(shareUrl).pathname;
+  const storyPath = `${sharePath}/historia`;
 
   useEffect(() => {
     setCanNativeShare(typeof navigator.share === "function");
   }, []);
+
+  // En celular la imagen se comparte como archivo (Instagram la recibe directo
+  // en historias). Se descarga antes porque el navegador exige compartir
+  // apenas se toca el botón.
+  useEffect(() => {
+    if (typeof navigator.canShare !== "function") return;
+    let cancelled = false;
+
+    fetch(storyPath)
+      .then((response) => (response.ok ? response.blob() : Promise.reject()))
+      .then((blob) => {
+        const file = new File([blob], "testometro-historia.png", { type: "image/png" });
+        if (!cancelled && navigator.canShare({ files: [file] })) setStoryFile(file);
+      })
+      .catch(() => {
+        // Sin archivo, el botón queda como descarga normal.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [storyPath]);
+
+  async function shareStory() {
+    if (!storyFile) return;
+    // El link queda copiado para pegarlo con el sticker de enlace de Instagram.
+    navigator.clipboard?.writeText(shareUrl).catch(() => {});
+    setStoryHint(true);
+    try {
+      await navigator.share({ files: [storyFile] });
+    } catch {
+      // La persona cerró el menú de compartir.
+    }
+  }
 
   async function nativeShare() {
     try {
@@ -135,6 +172,34 @@ export function ShareButtons({
           {copied ? "Copiado" : "Copiar"}
         </button>
       </div>
+
+      {storyFile ? (
+        <button
+          className="focus-ring mt-3 flex w-full items-center justify-center gap-2 border-4 border-ink bg-mustard px-4 py-3 text-sm font-black uppercase"
+          type="button"
+          onClick={shareStory}
+        >
+          <Instagram size={18} strokeWidth={3} />
+          Imagen para historia
+        </button>
+      ) : (
+        <a
+          className="focus-ring mt-3 flex w-full items-center justify-center gap-2 border-4 border-ink bg-mustard px-4 py-3 text-sm font-black uppercase"
+          download="testometro-historia.png"
+          href={storyPath}
+          onClick={() => setStoryHint(true)}
+        >
+          <Instagram size={18} strokeWidth={3} />
+          Descargar imagen para historia
+        </a>
+      )}
+
+      {storyHint ? (
+        <p className="mt-2 text-center text-xs font-bold text-ink/80">
+          {storyFile ? "Copiamos tu link: en la historia" : "En tu historia"}, agrega el
+          sticker de enlace para que tus amigos lleguen al test.
+        </p>
+      ) : null}
 
       <p className="mt-3 text-center text-xs font-semibold text-ink/60">
         El link muestra tu nickname, puntaje y grupo, no tus respuestas.{" "}

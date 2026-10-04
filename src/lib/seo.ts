@@ -131,7 +131,8 @@ export function getCatalogTestMetadata(catalogTest: CatalogTest): Metadata {
   const description = catalogTest.description;
 
   return {
-    title,
+    // La plantilla del layout ya agrega " | Testómetro Chileno" a la pestaña.
+    title: catalogTest.title,
     description,
     keywords: [...siteConfig.keywords, catalogTest.title, catalogTest.theme],
     alternates: {

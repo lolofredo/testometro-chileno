@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { ResultView } from "@/components/test/ResultView";
-import { siteConfig } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ sessionId: string }>;
 };
 
 export const metadata: Metadata = {
-  title: `Resultado personal | ${siteConfig.name}`,
+  title: "Resultado personal",
   robots: {
     index: false,
     follow: false
