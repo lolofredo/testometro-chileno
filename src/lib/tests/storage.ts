@@ -44,6 +44,7 @@ export function createStoredSession(input: {
   nickname: string;
   isPublic: boolean;
   fromShare: boolean;
+  origin?: { source: string; campaign?: string };
 }) {
   const session: StoredSession = {
     sessionId: createSessionId(),
@@ -51,6 +52,7 @@ export function createStoredSession(input: {
     nickname: input.nickname,
     isPublic: input.isPublic,
     fromShare: input.fromShare,
+    ...(input.origin ? { origin: input.origin } : {}),
     answers: {},
     currentBlock: 0,
     updatedAt: new Date().toISOString()

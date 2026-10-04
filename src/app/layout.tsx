@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/next";
+import { VisitOriginTracker } from "@/components/analytics/VisitOriginTracker";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -33,6 +34,7 @@ export default function RootLayout({
           }}
         />
         <Analytics />
+        <VisitOriginTracker />
       </body>
     </html>
   );

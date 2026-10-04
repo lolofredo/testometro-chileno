@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { VisitOrigin } from "./origin";
 
 // Eventos de medición en la tabla `events` de Supabase (ver supabase/events.sql).
 // Sin nickname ni respuestas. Si Supabase falla, el evento se pierde y el
@@ -22,6 +23,8 @@ type EventData = {
   fromShare?: boolean;
   // Número de bloque (desde 1), solo en block_completed.
   block?: number;
+  // Origen de la visita, solo en test_started y test_completed.
+  origin?: VisitOrigin;
 };
 
 const fromShareKey = "testometro:from-share";
@@ -58,9 +61,11 @@ export function trackEvent(event: EventName, data: EventData) {
       channel: data.channel ?? null,
       score: data.score ?? null,
       from_share: data.fromShare ?? false,
-      // La columna `block` solo se envía cuando hay bloque, para que los demás
-      // eventos no fallen si la tabla aún no la tiene.
-      ...(data.block !== undefined ? { block: data.block } : {})
+      // Las columnas `block`, `source` y `campaign` solo se envían cuando
+      // hay dato, para que los demás eventos no fallen si la tabla aún no
+      // las tiene.
+      ...(data.block !== undefined ? { block: data.block } : {}),
+      ...(data.origin ? { source: data.origin.source, campaign: data.origin.campaign ?? null } : {})
     })
     .then(({ error }) => {
       if (error) console.warn("Could not track event", event, error.message);

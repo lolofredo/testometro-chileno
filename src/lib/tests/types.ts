@@ -37,6 +37,8 @@ export type StoredSession = {
   isPublic: boolean;
   // Empezó el test después de abrir un resultado compartido (para medición).
   fromShare?: boolean;
+  // De dónde llegó al sitio la visita en que empezó el test (para medición).
+  origin?: { source: string; campaign?: string };
   answers: Record<string, AnswerValue>;
   currentBlock: number;
   completedAt?: string;

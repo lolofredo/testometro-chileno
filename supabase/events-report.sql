@@ -69,3 +69,30 @@ where e.event = 'block_completed'
   and e.created_at > now() - interval '30 days'
 group by e.test_slug, e.block
 order by e.test_slug, e.block;
+
+-- 5. Por origen y campaña: de dónde llegó la gente que empezó un test.
+-- "sin dato" = tests empezados antes de medir el origen (2026-10-04).
+with empezados as (
+  select session_id, coalesce(source, 'sin dato') as origen, coalesce(campaign, '-') as campana
+  from events
+  where event = 'test_started' and created_at > now() - interval '30 days'
+)
+select
+  origen,
+  campana,
+  count(*) as empezaron,
+  count(*) filter (
+    where exists (select 1 from events c where c.session_id = e.session_id and c.event = 'test_completed')
+  ) as terminaron,
+  round(
+    100.0 * count(*) filter (
+      where exists (select 1 from events c where c.session_id = e.session_id and c.event = 'test_completed')
+    ) / nullif(count(*), 0),
+    1
+  ) as pct_terminan,
+  count(*) filter (
+    where exists (select 1 from events s where s.session_id = e.session_id and s.event = 'share_click')
+  ) as compartieron
+from empezados e
+group by origen, campana
+order by empezaron desc;

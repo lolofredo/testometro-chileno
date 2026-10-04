@@ -95,7 +95,8 @@ export function TestPlayer({ test }: { test: TestDefinition }) {
         testSlug: test.slug,
         sessionId: completed.sessionId,
         score,
-        fromShare: completed.fromShare
+        fromShare: completed.fromShare,
+        origin: completed.origin
       });
     }
 
