@@ -3,7 +3,7 @@ import Link from "next/link";
 import { TestCard } from "@/components/test/TestCard";
 import { tests } from "@/data/tests";
 import { catalogTests } from "@/data/test-catalog";
-import { absoluteUrl, siteConfig } from "@/lib/seo";
+import { absoluteUrl, siteConfig, siteOgImage } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Tests chilenos | Rotómetro, Cuicómetro, Chantómetro y cultura popular chilena",
@@ -27,14 +27,14 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: siteConfig.locale,
     type: "website",
-    images: [absoluteUrl("/memes/meme-1.png")]
+    images: [siteOgImage]
   },
   twitter: {
     card: "summary_large_image",
     title: "Tests chilenos | Testómetro Chileno",
     description:
       "Catálogo de tests chilenos de humor y cultura popular chilena.",
-    images: [absoluteUrl("/memes/meme-1.png")]
+    images: [siteOgImage.url]
   }
 };
 

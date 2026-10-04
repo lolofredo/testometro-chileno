@@ -5,7 +5,9 @@ const nextConfig: NextConfig = {
   // La fuente de las imágenes se lee del disco: hay que incluirla en la función.
   outputFileTracingIncludes: {
     "/r/[slug]/[token]/og": ["./src/lib/share/fonts/*.ttf"],
-    "/r/[slug]/[token]/historia": ["./src/lib/share/fonts/*.ttf"]
+    "/r/[slug]/[token]/historia": ["./src/lib/share/fonts/*.ttf"],
+    "/og": ["./src/lib/share/fonts/*.ttf"],
+    "/tests/[slug]/og": ["./src/lib/share/fonts/*.ttf"]
   },
   reactStrictMode: true,
   async headers() {

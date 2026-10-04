@@ -32,6 +32,12 @@ export function getInvitation(testSlug: string, testTitle: string) {
 // Los demás tienen "Obtuve X en el Y" y usan el formato general.
 const testsWithSharePhrases = new Set(["rotometro-2", "cuicometro", "chantometro"]);
 
+// Pregunta principal del test, sin el "¿Y tú": "¿Qué tan chanta eres?".
+export function getTestHeadline(testSlug: string, testTitle: string) {
+  const { question } = getInvitation(testSlug, testTitle);
+  return question.replace(/^¿Y tú qué/, "¿Qué").replace(/^¿Y a ti qué/, "¿Qué");
+}
+
 export function getShareText(input: {
   testSlug: string;
   testTitle: string;

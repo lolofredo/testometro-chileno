@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import type { CatalogTest } from "@/data/test-catalog";
 import type { TestDefinition } from "@/lib/tests/types";
 
-const ogImage = "/memes/meme-1.png";
 
 export const siteConfig = {
   name: "Testómetro Chileno",
@@ -42,6 +41,24 @@ export function absoluteUrl(path: string) {
   return `${siteConfig.url}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+// Imágenes de vista previa propias (src/app/og y src/app/tests/[slug]/og),
+// livianas, en vez del meme de 885 KB que WhatsApp no mostraba.
+export const siteOgImage = {
+  url: absoluteUrl("/og"),
+  width: 1200,
+  height: 630,
+  alt: "Testómetro Chileno: tests chilenos de humor"
+};
+
+export function getTestOgImage(test: TestDefinition) {
+  return {
+    url: absoluteUrl(`/tests/${test.slug}/og`),
+    width: 1200,
+    height: 630,
+    alt: `${test.title}: test chileno de humor`
+  };
+}
+
 export const defaultMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -63,20 +80,13 @@ export const defaultMetadata: Metadata = {
     siteName: siteConfig.name,
     locale: siteConfig.locale,
     type: "website",
-    images: [
-      {
-        url: absoluteUrl(ogImage),
-        width: 982,
-        height: 982,
-        alt: "Meme chileno del archivo visual del Testómetro Chileno"
-      }
-    ]
+    images: [siteOgImage]
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [absoluteUrl(ogImage)]
+    images: [siteOgImage.url]
   },
   robots: {
     index: true,
@@ -116,13 +126,13 @@ export function getTestMetadata(test: TestDefinition): Metadata {
       siteName: siteConfig.name,
       locale: siteConfig.locale,
       type: "website",
-      images: defaultMetadata.openGraph?.images
+      images: [getTestOgImage(test)]
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [absoluteUrl(ogImage)]
+      images: [getTestOgImage(test).url]
     }
   };
 }
@@ -147,13 +157,13 @@ export function getCatalogTestMetadata(catalogTest: CatalogTest): Metadata {
       siteName: siteConfig.name,
       locale: siteConfig.locale,
       type: "website",
-      images: defaultMetadata.openGraph?.images
+      images: [siteOgImage]
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [absoluteUrl(ogImage)]
+      images: [siteOgImage.url]
     }
   };
 }

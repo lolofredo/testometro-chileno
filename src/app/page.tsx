@@ -5,7 +5,7 @@ import { ArrowRight, Clock, Images, Play } from "lucide-react";
 import { getTestBySlug, tests } from "@/data/tests";
 import { catalogTests, type CatalogTest } from "@/data/test-catalog";
 import { memes } from "@/data/memes";
-import { absoluteUrl, siteConfig } from "@/lib/seo";
+import { absoluteUrl, siteConfig, siteOgImage } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Testómetro Chileno | Tests chilenos, memes y humor chileno",
@@ -22,14 +22,14 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: siteConfig.locale,
     type: "website",
-    images: [absoluteUrl("/memes/meme-1.png")]
+    images: [siteOgImage]
   },
   twitter: {
     card: "summary_large_image",
     title: "Testómetro Chileno",
     description:
       "Tests chilenos, memes chilenos y cultura popular chilena para compartir.",
-    images: [absoluteUrl("/memes/meme-1.png")]
+    images: [siteOgImage.url]
   }
 };
 

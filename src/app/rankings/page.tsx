@@ -4,7 +4,7 @@ import { Clock, Trophy } from "lucide-react";
 import { RankingView } from "@/components/test/RankingView";
 import { getTestBySlug } from "@/data/tests";
 import { catalogTests } from "@/data/test-catalog";
-import { absoluteUrl, siteConfig } from "@/lib/seo";
+import { absoluteUrl, siteConfig, siteOgImage } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Rankings | Resultados públicos de tests chilenos",
@@ -28,14 +28,14 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: siteConfig.locale,
     type: "website",
-    images: [absoluteUrl("/memes/meme-1.png")]
+    images: [siteOgImage]
   },
   twitter: {
     card: "summary_large_image",
     title: "Rankings | Testómetro Chileno",
     description:
       "Rankings públicos del Rotómetro, Cuicómetro, Chantómetro y tests chilenos.",
-    images: [absoluteUrl("/memes/meme-1.png")]
+    images: [siteOgImage.url]
   }
 };
 

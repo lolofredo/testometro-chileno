@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Images, Sparkles } from "lucide-react";
 import { memeSections, memes } from "@/data/memes";
-import { absoluteUrl, siteConfig } from "@/lib/seo";
+import { absoluteUrl, siteConfig, siteOgImage } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Memes chilenos | Humor chileno y cultura popular chilena",
@@ -27,14 +27,14 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: siteConfig.locale,
     type: "website",
-    images: [absoluteUrl("/memes/meme-1.png")]
+    images: [siteOgImage]
   },
   twitter: {
     card: "summary_large_image",
     title: "Memes chilenos | Testómetro Chileno",
     description:
       "Galería de memes chilenos, humor chileno y cultura popular chilena.",
-    images: [absoluteUrl("/memes/meme-1.png")]
+    images: [siteOgImage.url]
   }
 };
 

@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import type { ReactNode } from "react";
 import { ImageResponse } from "next/og";
 import { getInvitation } from "./share-copy";
 import type { SharedResult } from "./result-link";
@@ -7,8 +8,9 @@ import type { SharedResult } from "./result-link";
 const colors = {
   ink: "#17120f",
   paper: "#fff8e7",
-  tomato: "#d93a24",
+  tomato: "#c8321d",
   mustard: "#f3b61f",
+  mint: "#2bbf8a",
   bluepop: "#1c5bd6"
 };
 
@@ -264,5 +266,122 @@ export async function renderResultStory(shared: SharedResult) {
       </div>
     ),
     await imageOptions(1080, 1920)
+  );
+}
+
+function Gauge({ size, needle }: { size: number; needle: "low" | "high" }) {
+  const tip = needle === "high" ? { x: 168, y: 58 } : { x: 62, y: 62 };
+  return (
+    <svg width={size} height={Math.round(size * 0.555)} viewBox="0 0 220 122">
+      <path d="M20 112 A90 90 0 0 1 65 34" fill="none" stroke={colors.mint} strokeWidth="22" />
+      <path d="M65 34 A90 90 0 0 1 155 34" fill="none" stroke={colors.mustard} strokeWidth="22" />
+      <path d="M155 34 A90 90 0 0 1 200 112" fill="none" stroke={colors.tomato} strokeWidth="22" />
+      <line x1="110" y1="112" x2={tip.x} y2={tip.y} stroke={colors.ink} strokeWidth="9" strokeLinecap="round" />
+      <circle cx="110" cy="112" r="13" fill={colors.ink} />
+    </svg>
+  );
+}
+
+function PreviewFrame({ children, footer }: { children: ReactNode; footer: string }) {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: colors.paper,
+        border: `14px solid ${colors.ink}`,
+        color: colors.ink,
+        fontFamily: "Archivo Black"
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: colors.tomato,
+          borderBottom: `8px solid ${colors.ink}`,
+          padding: "14px 36px",
+          color: colors.paper,
+          fontSize: 28
+        }}
+      >
+        <span>ÚLTIMO MINUTO</span>
+        <span>TESTÓMETRO CHILENO</span>
+      </div>
+      <div style={{ display: "flex", flex: 1, alignItems: "center", padding: "0 36px" }}>{children}</div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          margin: "0 36px 30px",
+          padding: "16px 26px",
+          backgroundColor: colors.mustard,
+          border: `6px solid ${colors.ink}`,
+          fontSize: 30
+        }}
+      >
+        <span>{footer}</span>
+        <span>testometro.cl</span>
+      </div>
+    </div>
+  );
+}
+
+// Vista previa de la portada de un test (/tests/<slug>): la pregunta del test
+// en grande. Reemplaza al meme genérico, que pesaba 885 KB.
+export async function renderTestPreview(input: {
+  headline: string;
+  title: string;
+  questionCount: number;
+  durationLabel: string;
+}) {
+  return new ImageResponse(
+    (
+      <PreviewFrame footer="Sí o no · gratis · sin registro">
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, paddingRight: 24 }}>
+          <div
+            style={{
+              fontSize: bySize(input.headline, [[18, 92], [24, 80]], 68),
+              lineHeight: 1,
+              textTransform: "uppercase"
+            }}
+          >
+            {input.headline}
+          </div>
+          <div style={{ fontSize: 34, marginTop: 22, color: colors.tomato }}>
+            {`${input.title} · ${input.questionCount} preguntas · ${input.durationLabel}`}
+          </div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 280 }}>
+          <Gauge size={270} needle="high" />
+        </div>
+      </PreviewFrame>
+    ),
+    await imageOptions(1200, 630)
+  );
+}
+
+// Vista previa general del sitio (home y páginas sin imagen propia).
+export async function renderSitePreview(input: { tagline: string; testCount: number }) {
+  return new ImageResponse(
+    (
+      <PreviewFrame footer={`${input.testCount} tests · sí o no · gratis`}>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, paddingRight: 24 }}>
+          <div style={{ fontSize: 96, lineHeight: 0.95, textTransform: "uppercase" }}>Testómetro</div>
+          <div style={{ fontSize: 96, lineHeight: 0.95, textTransform: "uppercase", color: colors.tomato }}>
+            Chileno
+          </div>
+          <div style={{ fontSize: 40, marginTop: 24 }}>{input.tagline}</div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 280 }}>
+          <Gauge size={270} needle="high" />
+        </div>
+      </PreviewFrame>
+    ),
+    await imageOptions(1200, 630)
   );
 }
