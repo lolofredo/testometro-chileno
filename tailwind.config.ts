@@ -7,7 +7,7 @@ const config: Config = {
       colors: {
         ink: "#17120f",
         paper: "#fff8e7",
-        tomato: "#d93a24",
+        tomato: "#c8321d",
         mustard: "#f3b61f",
         mint: "#2bbf8a",
         bluepop: "#1c5bd6"

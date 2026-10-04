@@ -22,30 +22,30 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="flex shrink-0 items-center gap-1 text-xs font-extrabold uppercase sm:gap-2 sm:text-sm">
+        <nav className="flex shrink-0 items-center gap-0.5 text-xs font-extrabold uppercase sm:gap-2 sm:text-sm">
           <Link
             aria-label="Ver tests"
-            className="focus-ring inline-flex items-center gap-1 rounded-sm px-2 py-2 hover:bg-mustard sm:px-3"
+            className="focus-ring inline-flex min-h-12 min-w-12 flex-col items-center justify-center gap-0.5 rounded-sm px-1.5 py-1 hover:bg-mustard sm:min-h-0 sm:flex-row sm:gap-1 sm:px-3 sm:py-2"
             href="/tests"
           >
-            <ListChecks size={15} strokeWidth={3} />
-            <span className="hidden sm:inline">Tests</span>
+            <ListChecks aria-hidden="true" size={20} strokeWidth={3} />
+            <span className="text-[11px] leading-none sm:text-sm">Tests</span>
           </Link>
           <Link
             aria-label="Ver memes"
-            className="focus-ring inline-flex items-center gap-1 rounded-sm px-2 py-2 hover:bg-mustard sm:px-3"
+            className="focus-ring inline-flex min-h-12 min-w-12 flex-col items-center justify-center gap-0.5 rounded-sm px-1.5 py-1 hover:bg-mustard sm:min-h-0 sm:flex-row sm:gap-1 sm:px-3 sm:py-2"
             href="/memes"
           >
-            <Images size={15} strokeWidth={3} />
-            <span className="hidden sm:inline">Memes</span>
+            <Images aria-hidden="true" size={20} strokeWidth={3} />
+            <span className="text-[11px] leading-none sm:text-sm">Memes</span>
           </Link>
           <Link
             aria-label="Ver rankings"
-            className="focus-ring inline-flex items-center gap-1 rounded-sm px-2 py-2 hover:bg-mustard sm:px-3"
+            className="focus-ring inline-flex min-h-12 min-w-12 flex-col items-center justify-center gap-0.5 rounded-sm px-1.5 py-1 hover:bg-mustard sm:min-h-0 sm:flex-row sm:gap-1 sm:px-3 sm:py-2"
             href="/rankings"
           >
-            <Trophy size={15} strokeWidth={3} />
-            <span className="hidden sm:inline">Rankings</span>
+            <Trophy aria-hidden="true" size={20} strokeWidth={3} />
+            <span className="text-[11px] leading-none sm:text-sm">Rankings</span>
           </Link>
         </nav>
       </div>
