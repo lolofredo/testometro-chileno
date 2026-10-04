@@ -9,6 +9,7 @@ import { QuestionRow } from "./QuestionRow";
 import type { AnswerValue, StoredSession, TestDefinition } from "@/lib/tests/types";
 import { calculateScore, chunkQuestions, getAnsweredCount, getResultRange } from "@/lib/tests/scoring";
 import { addRemoteLeaderboardEntry } from "@/lib/supabase/leaderboard";
+import { cleanShareNickname, RANKING_NICKNAME_MAX_LENGTH } from "@/lib/share/nickname";
 import {
   addLeaderboardEntry,
   clearAnswer,
@@ -74,7 +75,7 @@ export function TestPlayer({ test }: { test: TestDefinition }) {
       const leaderboardEntry = {
         sessionId: completed.sessionId,
         testSlug: completed.testSlug,
-        nickname: completed.nickname,
+        nickname: cleanShareNickname(completed.nickname, RANKING_NICKNAME_MAX_LENGTH),
         score,
         groupTitle: result.title,
         completedAt: completed.completedAt ?? new Date().toISOString()

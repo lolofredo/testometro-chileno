@@ -1,4 +1,6 @@
 export const SHARE_NICKNAME_MAX_LENGTH = 20;
+// El ranking tiene más espacio: usa el mismo largo que permite el formulario.
+export const RANKING_NICKNAME_MAX_LENGTH = 32;
 export const ANONYMOUS_NICKNAME = "Anónimo";
 
 // Raíces que se buscan dentro del nickname completo, sin espacios ni signos
@@ -132,16 +134,16 @@ function isOffensive(nickname: string) {
     .some((word) => word && normalizedWords.has(word));
 }
 
-function truncateAtWord(value: string) {
-  if (value.length <= SHARE_NICKNAME_MAX_LENGTH) return value;
-  const cut = value.slice(0, SHARE_NICKNAME_MAX_LENGTH + 1);
+function truncateAtWord(value: string, maxLength: number) {
+  if (value.length <= maxLength) return value;
+  const cut = value.slice(0, maxLength + 1);
   const lastSpace = cut.lastIndexOf(" ");
-  return (lastSpace >= 8 ? cut.slice(0, lastSpace) : cut.slice(0, SHARE_NICKNAME_MAX_LENGTH)).trim();
+  return (lastSpace >= 8 ? cut.slice(0, lastSpace) : cut.slice(0, maxLength)).trim();
 }
 
 // Nickname apto para mostrarse en links e imágenes públicas: sin links,
 // sin emojis ni caracteres raros, con largo máximo y sin insultos.
-export function cleanShareNickname(raw: string) {
+export function cleanShareNickname(raw: string, maxLength = SHARE_NICKNAME_MAX_LENGTH) {
   const withoutLinks = raw
     .normalize("NFKC")
     .split(/\s+/)
@@ -156,7 +158,8 @@ export function cleanShareNickname(raw: string) {
       .replace(/[^\p{L}\p{M}\p{N} ._'-]/gu, "")
       .replace(/[._'-]{2,}/g, "")
       .replace(/\s+/g, " ")
-      .trim()
+      .trim(),
+    maxLength
   );
 
   if (!/[\p{L}\p{N}]/u.test(cleaned) || isOffensive(cleaned)) {

@@ -1,5 +1,5 @@
 import { getTestBySlug } from "@/data/tests";
-import { getResultRange } from "@/lib/tests/scoring";
+import { getResultRange, getScoreBounds } from "@/lib/tests/scoring";
 import type { ResultRange, TestDefinition } from "@/lib/tests/types";
 import { cleanShareNickname } from "./nickname";
 
@@ -33,16 +33,6 @@ function fromBase64Url(value: string) {
   const binary = atob(base64);
   const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
   return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
-}
-
-function getScoreBounds(test: TestDefinition) {
-  return test.questions.reduce(
-    (bounds, question) => ({
-      min: bounds.min + Math.min(question.pointsYes, question.pointsNo),
-      max: bounds.max + Math.max(question.pointsYes, question.pointsNo)
-    }),
-    { min: 0, max: 0 }
-  );
 }
 
 export function getSharePath(testSlug: string, score: number, nickname: string) {

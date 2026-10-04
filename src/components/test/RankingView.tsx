@@ -6,6 +6,23 @@ import { ArrowRight } from "lucide-react";
 import type { LeaderboardEntry, TestDefinition } from "@/lib/tests/types";
 import { getLeaderboard } from "@/lib/tests/storage";
 import { fetchRemoteLeaderboard } from "@/lib/supabase/leaderboard";
+import { cleanShareNickname, RANKING_NICKNAME_MAX_LENGTH } from "@/lib/share/nickname";
+import { getResultRange, getScoreBounds } from "@/lib/tests/scoring";
+
+// La tabla acepta cualquier texto desde la clave pública, así que al mostrar
+// se filtra el nickname, se descartan puntajes imposibles y el grupo se
+// calcula desde el puntaje en vez de confiar en lo guardado.
+function toDisplayEntries(test: TestDefinition, entries: LeaderboardEntry[]) {
+  const { min, max } = getScoreBounds(test);
+
+  return entries
+    .filter((entry) => Number.isInteger(entry.score) && entry.score >= min && entry.score <= max)
+    .map((entry) => ({
+      ...entry,
+      nickname: cleanShareNickname(entry.nickname, RANKING_NICKNAME_MAX_LENGTH),
+      groupTitle: getResultRange(test, entry.score).title
+    }));
+}
 
 export function RankingView({
   headingLevel = "h1",
@@ -24,16 +41,16 @@ export function RankingView({
     let isMounted = true;
 
     async function loadLeaderboard() {
-      const remoteEntries = await fetchRemoteLeaderboard(test.slug);
+      const remoteEntries = await fetchRemoteLeaderboard(test.slug, getScoreBounds(test));
       if (!isMounted) return;
 
       if (remoteEntries) {
-        setEntries(remoteEntries);
+        setEntries(toDisplayEntries(test, remoteEntries));
         setSource("global");
         return;
       }
 
-      setEntries(getLeaderboard(test.slug));
+      setEntries(toDisplayEntries(test, getLeaderboard(test.slug)));
       setSource("local");
     }
 
@@ -42,7 +59,7 @@ export function RankingView({
     return () => {
       isMounted = false;
     };
-  }, [test.slug]);
+  }, [test]);
 
   return (
     <section className="mx-auto max-w-5xl">

@@ -18,6 +18,17 @@ export function calculateScore(
   }, 0);
 }
 
+// Puntaje mínimo y máximo posibles del test.
+export function getScoreBounds(test: TestDefinition) {
+  return test.questions.reduce(
+    (bounds, question) => ({
+      min: bounds.min + Math.min(question.pointsYes, question.pointsNo),
+      max: bounds.max + Math.max(question.pointsYes, question.pointsNo)
+    }),
+    { min: 0, max: 0 }
+  );
+}
+
 export function getAnsweredCount(
   test: TestDefinition,
   answers: Record<string, AnswerValue>

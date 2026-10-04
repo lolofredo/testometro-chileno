@@ -46,4 +46,5 @@ Sitio https://testometro.cl: tests de humor y cultura popular chilena. Next.js 1
 - Variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, opcional `NEXT_PUBLIC_SITE_URL`. Quedan fijas al compilar: si cambian en Vercel, hay que redesplegar.
 - Supabase gratis se pausa tras 7 días sin actividad: `vercel.json` programa un Vercel Cron diario a `/api/keepalive` (`src/app/api/keepalive/route.ts`), que hace una consulta mínima a `leaderboard_entries`. Abrir https://testometro.cl/api/keepalive debe responder `{"ok":true,...}`.
 - Si faltan o Supabase no responde, la app vuelve sin aviso al ranking local ("Ranking local de este navegador…").
-- Riesgo conocido: cualquiera puede insertar puntajes o nicknames falsos (sin validación ni límite de envíos).
+- Riesgo conocido: cualquiera puede insertar filas directo en la tabla con la clave pública (sin validación ni límite de envíos). Por eso `RankingView` limpia al mostrar: nickname con el mismo filtro de `src/lib/share/nickname.ts` (máximo 32 caracteres), sin puntajes imposibles para el test (también filtrados en la consulta) y con el grupo calculado desde el puntaje, no el guardado. Al guardar, `TestPlayer` también limpia el nickname.
+- `Archivo/` está excluido de `tsconfig.json` y de ESLint (es una copia vieja sin subir que rompía el typecheck local).

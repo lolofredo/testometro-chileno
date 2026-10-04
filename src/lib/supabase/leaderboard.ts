@@ -21,7 +21,10 @@ function mapRowToEntry(row: LeaderboardRow): LeaderboardEntry {
   };
 }
 
-export async function fetchRemoteLeaderboard(testSlug: string) {
+export async function fetchRemoteLeaderboard(
+  testSlug: string,
+  scoreBounds: { min: number; max: number }
+) {
   if (!hasSupabaseConfig()) return null;
 
   const supabase = getSupabaseClient();
@@ -31,6 +34,9 @@ export async function fetchRemoteLeaderboard(testSlug: string) {
     .from("leaderboard_entries")
     .select("session_id,test_slug,nickname,score,group_title,completed_at")
     .eq("test_slug", testSlug)
+    // Puntajes imposibles solo pueden venir de inserciones a mano.
+    .gte("score", scoreBounds.min)
+    .lte("score", scoreBounds.max)
     .order("score", { ascending: false })
     .order("completed_at", { ascending: true })
     .limit(50);
