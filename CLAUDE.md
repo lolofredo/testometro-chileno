@@ -22,7 +22,7 @@ Sitio https://testometro.cl: tests de humor y cultura popular chilena. Next.js 1
 - Node 22.
 
 ## Estructura
-- `src/app/`: páginas. `/`, `/tests`, `/tests/[slug]` (portada), `/tests/[slug]/start` (nickname + opción de ranking), `/tests/[slug]/play` (bloques de 10 preguntas), `/results/[sessionId]`, `/rankings` (todos los rankings en una página; `/rankings/[slug]` redirige ahí), `/memes`, `/about`, `sitemap.ts`, `robots.ts`.
+- `src/app/`: páginas. `/`, `/tests`, `/tests/[slug]` (portada), `/tests/[slug]/start` (nickname + opción de ranking), `/tests/[slug]/play` (bloques de 10 preguntas), `/results/[sessionId]`, `/r/[slug]/[token]` (resultado público compartible), `/rankings` (todos los rankings en una página; `/rankings/[slug]` redirige ahí), `/memes`, `/about`, `sitemap.ts`, `robots.ts`.
 - `src/data/`: contenido de cada test, un archivo por test:
   - `rotometro-original.ts`: 150 preguntas (intocable)
   - `rotometro-2.ts`: 50 preguntas
@@ -40,6 +40,7 @@ Sitio https://testometro.cl: tests de humor y cultura popular chilena. Next.js 1
 
 ## Resultados y ranking
 - Progreso, resultados y ranking local viven en `localStorage` (`testometro:session:*`, `testometro:active:*`, `testometro:leaderboard:*`). Los links `/results/...` solo funcionan en el navegador donde se hizo el test.
+- Resultado compartible: `/r/<test>/<token>`. El token lleva test, puntaje y nickname dentro del link (sin base de datos, funciona aunque Supabase esté caído); nunca las respuestas. Código en `src/lib/share/` (`result-link.ts` arma y lee el link; `nickname.ts` filtra insultos, links y caracteres raros, y deja máximo 20 caracteres; `share-copy.ts` tiene los textos de invitación por test). La imagen de vista previa sale de `src/app/r/[slug]/[token]/og/route.tsx` (1200×630, unos 70 KB). Las páginas `/r/` llevan noindex (meta + cabecera en `next.config.ts`) y **no** se bloquean en robots.txt, porque X dejaría de mostrar la vista previa.
 - Ranking global: Supabase, tabla `leaderboard_entries`, leída y escrita desde el navegador con la clave pública. Se escribe solo si la persona marca "Aparecer en ranking público".
 - Variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, opcional `NEXT_PUBLIC_SITE_URL`. Quedan fijas al compilar: si cambian en Vercel, hay que redesplegar.
 - Supabase gratis se pausa tras 7 días sin actividad: `vercel.json` programa un Vercel Cron diario a `/api/keepalive` (`src/app/api/keepalive/route.ts`), que hace una consulta mínima a `leaderboard_entries`. Abrir https://testometro.cl/api/keepalive debe responder `{"ok":true,...}`.

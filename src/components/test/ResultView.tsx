@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Copy, RotateCcw, Trophy } from "lucide-react";
+import { RotateCcw, Trophy } from "lucide-react";
 import { ResultCard } from "./ResultCard";
+import { ShareButtons, StickyWhatsAppBar } from "./ShareButtons";
 import type { StoredSession } from "@/lib/tests/types";
 import { getTestBySlug } from "@/data/tests";
 import { calculateScore, getResultRange } from "@/lib/tests/scoring";
@@ -15,7 +16,6 @@ export function ResultView({
   sessionId: string;
 }) {
   const [session, setSession] = useState<StoredSession | null>(null);
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     setSession(getStoredSession(sessionId));
@@ -29,14 +29,6 @@ export function ResultView({
     const result = getResultRange(test, score);
     return { score, result };
   }, [session, test]);
-
-  async function copyResult() {
-    if (!session || !resultData || !test) return;
-    const text = `${session.nickname} obtuvo ${resultData.score} puntos en el ${test.title}: ${resultData.result.title}.`;
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1600);
-  }
 
   if (!session || !test || !resultData) {
     return (
@@ -61,15 +53,15 @@ export function ResultView({
         result={resultData.result}
       />
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-3">
-        <button
-          className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-mustard px-5 py-3 text-sm font-black uppercase shadow-[5px_5px_0_#17120f]"
-          type="button"
-          onClick={copyResult}
-        >
-          <Copy size={18} strokeWidth={3} />
-          {copied ? "Copiado" : "Copiar resultado"}
-        </button>
+      <ShareButtons
+        testSlug={test.slug}
+        testTitle={test.title}
+        resultTitle={resultData.result.title}
+        score={resultData.score}
+        nickname={session.nickname}
+      />
+
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
         <Link
           className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-white px-5 py-3 text-sm font-black uppercase"
           href={`/rankings#ranking-${test.slug}`}
@@ -85,6 +77,14 @@ export function ResultView({
           Repetir test
         </Link>
       </div>
+
+      <StickyWhatsAppBar
+        testSlug={test.slug}
+        testTitle={test.title}
+        resultTitle={resultData.result.title}
+        score={resultData.score}
+        nickname={session.nickname}
+      />
     </div>
   );
 }

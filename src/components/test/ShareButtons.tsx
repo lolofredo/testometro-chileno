@@ -1,0 +1,147 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Copy, Share2 } from "lucide-react";
+import { absoluteUrl } from "@/lib/seo";
+import { getSharePath } from "@/lib/share/result-link";
+import { getShareText } from "@/lib/share/share-copy";
+
+function WhatsAppIcon() {
+  return (
+    <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3c-.2.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.6-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3Z" />
+    </svg>
+  );
+}
+
+function XIcon() {
+  return (
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.2 2.3h3.4l-7.4 8.5 8.7 11.5h-6.8l-5.3-7-6.1 7H1.3l7.9-9L.9 2.3h7l4.8 6.4 5.5-6.4Zm-1.2 18h1.9L7 4.2H5l12 16.1Z" />
+    </svg>
+  );
+}
+
+function getWhatsAppHref(text: string, url: string) {
+  return `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`;
+}
+
+type ShareInput = {
+  testSlug: string;
+  testTitle: string;
+  resultTitle: string;
+  score: number;
+  nickname: string;
+};
+
+function getShareData({ testSlug, testTitle, resultTitle, score, nickname }: ShareInput) {
+  const shareUrl = absoluteUrl(getSharePath(testSlug, score, nickname));
+  const shareText = getShareText({ testSlug, testTitle, resultTitle, score });
+  return { shareUrl, shareText, whatsappHref: getWhatsAppHref(shareText, shareUrl) };
+}
+
+// Barra fija abajo en celular, para que WhatsApp quede a mano sin bajar.
+export function StickyWhatsAppBar(props: ShareInput) {
+  const { whatsappHref } = getShareData(props);
+
+  return (
+    <div className="sticky bottom-0 z-20 -mx-4 mt-8 border-t-4 border-ink bg-paper p-3 sm:hidden">
+      <a
+        className="focus-ring flex w-full items-center justify-center gap-2 border-4 border-ink bg-[#25d366] px-4 py-3 text-sm font-black uppercase text-ink"
+        href={whatsappHref}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <WhatsAppIcon />
+        Compartir por WhatsApp
+      </a>
+    </div>
+  );
+}
+
+export function ShareButtons({
+  testSlug,
+  testTitle,
+  resultTitle,
+  score,
+  nickname
+}: ShareInput) {
+  const [copied, setCopied] = useState(false);
+  const [canNativeShare, setCanNativeShare] = useState(false);
+
+  const { shareUrl, shareText, whatsappHref } = getShareData({
+    testSlug,
+    testTitle,
+    resultTitle,
+    score,
+    nickname
+  });
+  const sharePath = new URL(shareUrl).pathname;
+
+  useEffect(() => {
+    setCanNativeShare(typeof navigator.share === "function");
+  }, []);
+
+  async function nativeShare() {
+    try {
+      await navigator.share({ title: testTitle, text: shareText, url: shareUrl });
+    } catch {
+      // La persona cerró el menú de compartir.
+    }
+  }
+
+  async function copyLink() {
+    await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
+  }
+
+  const secondaryButton =
+    "focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-white px-4 py-3 text-sm font-black uppercase";
+
+  return (
+    <section className="mt-6 border-4 border-ink bg-paper p-4 shadow-[8px_8px_0_#17120f] sm:p-6">
+      <p className="mb-3 text-center text-lg font-black uppercase sm:text-xl">
+        Compártelo y desafía a tus amigos
+      </p>
+
+      <a
+        className="focus-ring flex w-full items-center justify-center gap-2 border-4 border-ink bg-[#25d366] px-5 py-4 text-base font-black uppercase text-ink shadow-[5px_5px_0_#17120f] transition hover:-translate-y-0.5"
+        href={whatsappHref}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <WhatsAppIcon />
+        Compartir por WhatsApp
+      </a>
+
+      <div className={`mt-3 grid gap-3 ${canNativeShare ? "grid-cols-3" : "grid-cols-2"}`}>
+        {canNativeShare ? (
+          <button className={secondaryButton} type="button" onClick={nativeShare}>
+            <Share2 size={18} strokeWidth={3} />
+            Otras
+          </button>
+        ) : null}
+        <a
+          className={secondaryButton}
+          href={`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <XIcon />X
+        </a>
+        <button className={secondaryButton} type="button" onClick={copyLink}>
+          <Copy size={18} strokeWidth={3} />
+          {copied ? "Copiado" : "Copiar"}
+        </button>
+      </div>
+
+      <p className="mt-3 text-center text-xs font-semibold text-ink/60">
+        El link muestra tu nickname, puntaje y grupo, no tus respuestas.{" "}
+        <a className="underline" href={sharePath} rel="noopener" target="_blank">
+          Ver cómo se ve
+        </a>
+      </p>
+    </section>
+  );
+}
