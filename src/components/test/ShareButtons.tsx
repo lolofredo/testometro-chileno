@@ -27,6 +27,14 @@ function getWhatsAppHref(text: string, url: string) {
   return `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`;
 }
 
+// Marca de origen en el link compartido, para saber cuánta gente nueva trae
+// cada canal (la lee lib/analytics/origin.ts en quien abre el link).
+type ShareSource = "whatsapp" | "x" | "instagram" | "compartido";
+
+function withShareOrigin(url: string, source: ShareSource) {
+  return `${url}?utm_source=${source}&utm_campaign=resultado`;
+}
+
 type ShareInput = {
   testSlug: string;
   testTitle: string;
@@ -51,7 +59,11 @@ function getShareData({
 }: ShareInput) {
   const shareUrl = absoluteUrl(getSharePath(testSlug, score, nickname));
   const shareText = getShareText({ testSlug, testTitle, resultTitle, sharePhrase, score });
-  return { shareUrl, shareText, whatsappHref: getWhatsAppHref(shareText, shareUrl) };
+  return {
+    shareUrl,
+    shareText,
+    whatsappHref: getWhatsAppHref(shareText, withShareOrigin(shareUrl, "whatsapp"))
+  };
 }
 
 // Barra fija abajo en celular, para que WhatsApp quede a mano sin bajar.
@@ -115,7 +127,7 @@ export function ShareButtons(props: ShareInput) {
     if (!storyFile) return;
     trackShare(props, "story");
     // El link queda copiado para pegarlo con el sticker de enlace de Instagram.
-    navigator.clipboard?.writeText(shareUrl).catch(() => {});
+    navigator.clipboard?.writeText(withShareOrigin(shareUrl, "instagram")).catch(() => {});
     setStoryHint(true);
     try {
       await navigator.share({ files: [storyFile] });
@@ -127,7 +139,11 @@ export function ShareButtons(props: ShareInput) {
   async function nativeShare() {
     trackShare(props, "native");
     try {
-      await navigator.share({ title: testTitle, text: shareText, url: shareUrl });
+      await navigator.share({
+        title: testTitle,
+        text: shareText,
+        url: withShareOrigin(shareUrl, "compartido")
+      });
     } catch {
       // La persona cerró el menú de compartir.
     }
@@ -135,7 +151,7 @@ export function ShareButtons(props: ShareInput) {
 
   async function copyLink() {
     trackShare(props, "copy");
-    await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+    await navigator.clipboard.writeText(`${shareText} ${withShareOrigin(shareUrl, "compartido")}`);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1600);
   }
@@ -169,7 +185,7 @@ export function ShareButtons(props: ShareInput) {
         ) : null}
         <a
           className={secondaryButton}
-          href={`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`}
+          href={`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(withShareOrigin(shareUrl, "x"))}`}
           rel="noopener noreferrer"
           target="_blank"
           onClick={() => trackShare(props, "x")}
