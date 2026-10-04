@@ -82,7 +82,7 @@ export const cuicometro: TestDefinition = {
       shortLabel: "0 a 5",
       description:
         "Está seguro de que era candidato al cuicómetro? Si así lo piensa, le advierto: sus amistades finas no lo quieren cerca. Definitivamente usted no está al nivel de ellos, y ellos lo saben. Por favor abra los ojos.",
-      shareText: "Obtuve Infiltrado popular? en el Cuicómetro."
+      shareText: "Infiltrado popular. Mis amigos finos ya sospechan."
     },
     {
       groupNumber: 2,
@@ -92,7 +92,7 @@ export const cuicometro: TestDefinition = {
       shortLabel: "6 a 12",
       description:
         "Hay señales, pero todavía son administrables. A lo mejor usted piensa que puede pasar piola en cualquier ambiente, pero tenga cuidado. Cuando usted se hace el sencillo, la gente detecta su cuna.",
-      shareText: "Obtuve Cuico funcional de baja intensidad en el Cuicómetro."
+      shareText: "Cuico de baja intensidad. Paso piola, creo."
     },
     {
       groupNumber: 3,
@@ -102,7 +102,7 @@ export const cuicometro: TestDefinition = {
       shortLabel: "13 a 20",
       description:
         "Usted no vive completamente en el cuiquerío, pero lo visita con frecuencia. Déjeme advertirle: si piensa que no es cuico por no serlo 24/7, está equivocado. Es un cuico intermitente, pero reconocible.",
-      shareText: "Obtuve Cuico de fin de semana en el Cuicómetro."
+      shareText: "Cuico solo los fines de semana. De lunes a viernes, normal."
     },
     {
       groupNumber: 4,
@@ -112,7 +112,7 @@ export const cuicometro: TestDefinition = {
       shortLabel: "21 a 28",
       description:
         "Aquí el cuicómetro no miente: usted está certificado. Probablemente su presencia no sea bienvenida en sectores populares, aunque no los conozca. Con acción inmediata, podría popularizarse.",
-      shareText: "Obtuve Cuico certificado por la Cato en el Cuicómetro."
+      shareText: "Cuico certificado por la Cato. Tengo el diploma."
     },
     {
       groupNumber: 5,
@@ -122,7 +122,7 @@ export const cuicometro: TestDefinition = {
       shortLabel: "29 a 36",
       description:
         "Esto comienza a ser serio. Hay gente que lo escucha hablar, y piensa por dentro \"y este hueón no se dará cuenta?\". Se recomienda conocer la vega o Lo Valledor, ojalá disfrazado. No prometemos resultados.",
-      shareText: "Obtuve Cuico de lago en el Cuicómetro."
+      shareText: "Cuico de lago. La Vega la conozco por fotos."
     },
     {
       groupNumber: 6,
@@ -132,7 +132,7 @@ export const cuicometro: TestDefinition = {
       shortLabel: "37 a 44",
       description:
         "Al parecer su cuiquerío es estructural, heredado y muy difícil de revertir. Aunque usted no se dé cuenta, la gente se aburre y se cansa al verlo. Es prácticamente imposible que usted sea una persona normal.",
-      shareText: "Obtuve Cuico patrimonial / aristócrata en el Cuicómetro."
+      shareText: "Cuico patrimonial. Es heredado, no es culpa mía."
     },
     {
       groupNumber: 7,
@@ -142,7 +142,7 @@ export const cuicometro: TestDefinition = {
       shortLabel: "45 a 50",
       description:
         "Esto no es divertido. Usted es un desagrado. A cada lugar que va, usted incomoda a la gente decente y normal. Se ruega POR FAVOR que considere irse fuera del país, total no le cuesta nada.",
-      shareText: "Obtuve Cuico de Gran Reserva del Club de Golf en el Cuicómetro."
+      shareText: "Gran Reserva del Club de Golf. Me pidieron que me fuera del país."
     }
   ]
 };

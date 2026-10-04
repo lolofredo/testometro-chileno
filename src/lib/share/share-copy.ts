@@ -30,7 +30,7 @@ export function getInvitation(testSlug: string, testTitle: string) {
 
 // Tests cuyo `shareText` de cada grupo es una frase escrita para compartir.
 // Los demás tienen "Obtuve X en el Y" y usan el formato general.
-const testsWithSharePhrases = new Set(["chantometro"]);
+const testsWithSharePhrases = new Set(["rotometro-2", "cuicometro", "chantometro"]);
 
 export function getShareText(input: {
   testSlug: string;

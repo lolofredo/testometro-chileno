@@ -81,7 +81,7 @@ export const rotometro2: TestDefinition = {
       shortLabel: "0 a 5",
       description:
         "Usted pasó por el Rotómetro 2.0 sin mancharse. El sistema no sabe si está frente a una persona civilizada o alguien que mintió con un descaro preocupante. Si fue honesto, siga así.",
-      shareText: "Obtuve Fino y elegante en el Rotómetro 2.0."
+      shareText: "Fino y elegante. O mentí con un descaro preocupante."
     },
     {
       groupNumber: 2,
@@ -91,7 +91,7 @@ export const rotometro2: TestDefinition = {
       shortLabel: "6 a 12",
       description:
         "Usted todavía opera dentro de los márgenes de la convivencia humana, pero el sistema detectó pequeñas grietas. No es grave, pero tampoco se haga el fino. Hay síntomas, pero nada que no se pueda ajustar.",
-      shareText: "Obtuve Chileno decente con señales menores en el Rotómetro 2.0."
+      shareText: "Chileno decente. Las señales son menores, lo juro."
     },
     {
       groupNumber: 3,
@@ -101,7 +101,7 @@ export const rotometro2: TestDefinition = {
       shortLabel: "13 a 20",
       description:
         "Aquí ya no hablamos de coincidencias. Usted tiene conductas que el Chile 2026 reconoce de inmediato. No es el peor del curso, pero bastante lejos de los mejores. No le haría mal refinarse un poco.",
-      shareText: "Obtuve Roto de baja intensidad en el Rotómetro 2.0."
+      shareText: "Roto, pero de baja intensidad. Casi ni se nota."
     },
     {
       groupNumber: 4,
@@ -111,7 +111,7 @@ export const rotometro2: TestDefinition = {
       shortLabel: "21 a 28",
       description:
         "Esto ya es oficial: usted es un roto de tomo y lomo. Se recomienda tomar cartas en el asunto, y acercarse más a los cuicos. Está en el punto en que o se endereza, o se va por un tubo sin retorno de ordinariez.",
-      shareText: "Obtuve Roto oficial en el Rotómetro 2.0."
+      shareText: "Ya es oficial: roto de tomo y lomo."
     },
     {
       groupNumber: 5,
@@ -121,7 +121,7 @@ export const rotometro2: TestDefinition = {
       shortLabel: "29 a 36",
       description:
         "Esto comienza a preocupar. Su rotería y ordinariez no tienen límite. Se recomienda que comience estudiar a los cuicos de manera inmediata. No podemos afirmar que salga de su cumerío.",
-      shareText: "Obtuve Roto y cuma profesional en el Rotómetro 2.0."
+      shareText: "Roto y cuma profesional. Con años de experiencia."
     },
     {
       groupNumber: 6,
@@ -131,7 +131,7 @@ export const rotometro2: TestDefinition = {
       shortLabel: "37 a 44",
       description:
         "El sistema entró en alerta máxima. La convivencia a usted realmente le vale hongo. Lo pongan donde lo pongan, es un caso perdido. Debemos ser honestos: es muy probable que nunca salga de su estado.",
-      shareText: "Obtuve Monumento nacional al mal vivir en el Rotómetro 2.0."
+      shareText: "Soy monumento nacional al mal vivir. Pasen a verme."
     },
     {
       groupNumber: 7,
@@ -141,7 +141,7 @@ export const rotometro2: TestDefinition = {
       shortLabel: "45 a 50",
       description:
         "Esto ya no es gracioso. Usted es una carga para la sociedad. No aporta, no colabora, y su presencia nos hace a todos peores personas. POR FAVOR considere irse a vivir a la montaña y deje de estorbar.",
-      shareText: "Obtuve A su lado, el roto promedio es cuico en el Rotómetro 2.0."
+      shareText: "A mi lado, el roto promedio es cuico."
     }
   ]
 };
