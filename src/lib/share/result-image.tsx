@@ -2,6 +2,9 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { ReactNode } from "react";
 import { ImageResponse } from "next/og";
+import { getScoreBounds } from "@/lib/tests/scoring";
+import { getTestTheme, type TestTheme } from "@/lib/tests/theme";
+import { ANONYMOUS_NICKNAME } from "./nickname";
 import { getInvitation } from "./share-copy";
 import type { SharedResult } from "./result-link";
 
@@ -10,8 +13,7 @@ const colors = {
   paper: "#fff8e7",
   tomato: "#c8321d",
   mustard: "#f3b61f",
-  mint: "#2bbf8a",
-  bluepop: "#1c5bd6"
+  mint: "#2bbf8a"
 };
 
 // Archivo Black (Google Fonts, licencia OFL en fonts/ArchivoBlack-OFL.txt).
@@ -38,11 +40,24 @@ function bySize(text: string, sizes: [number, number][], fallback: number) {
   return sizes.find(([maxLength]) => text.length <= maxLength)?.[1] ?? fallback;
 }
 
-// Imagen de vista previa 1200×630 (WhatsApp, X, Instagram DM). Colores
-// planos para que el PNG pese poco.
+function gaugeValue(shared: SharedResult) {
+  const { min, max } = getScoreBounds(shared.test);
+  return (shared.score - min) / Math.max(1, max - min);
+}
+
+// Sin nombre (o con un nombre que el filtro rechazó) no se muestra "Anónimo".
+function hasName(nickname: string) {
+  return nickname !== ANONYMOUS_NICKNAME;
+}
+
+// Imagen de vista previa 1200×630 (WhatsApp, X, Instagram DM), con el color
+// del test en la franja. Colores planos para que el PNG pese poco.
 export async function renderResultPreview(shared: SharedResult) {
   const { test, score, nickname, result } = shared;
   const invitation = getInvitation(test.slug, test.title);
+  const theme = getTestTheme(test.slug);
+  const { max } = getScoreBounds(test);
+  const named = hasName(nickname);
 
   return new ImageResponse(
     (
@@ -58,40 +73,30 @@ export async function renderResultPreview(shared: SharedResult) {
           fontFamily: "Archivo Black"
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            backgroundColor: colors.tomato,
-            borderBottom: `8px solid ${colors.ink}`,
-            padding: "14px 36px",
-            color: colors.paper,
-            fontSize: 28
-          }}
-        >
-          <span>ÚLTIMO MINUTO</span>
-          <span>TESTÓMETRO CHILENO</span>
-        </div>
+        <TopBand theme={theme} />
 
-        <div style={{ display: "flex", flex: 1, padding: "30px 36px 0" }}>
-          <div style={{ display: "flex", flexDirection: "column", flex: 1, paddingRight: 32 }}>
-            <div
-              style={{
-                fontSize: bySize(nickname, [[10, 78], [14, 64]], 54),
-                lineHeight: 1,
-                textTransform: "uppercase"
-              }}
-            >
-              {nickname}
+        <div style={{ display: "flex", flex: 1, alignItems: "center", padding: "0 36px" }}>
+          <div style={{ display: "flex", flexDirection: "column", flex: 1, paddingRight: 28 }}>
+            {named ? (
+              <div
+                style={{
+                  fontSize: bySize(nickname, [[10, 74], [14, 62]], 52),
+                  lineHeight: 1,
+                  textTransform: "uppercase"
+                }}
+              >
+                {nickname}
+              </div>
+            ) : null}
+            <div style={{ fontSize: 30, marginTop: named ? 12 : 0 }}>
+              {named ? `cayó en el ${test.title}` : `Resultado del ${test.title}`}
             </div>
-            <div style={{ fontSize: 30, marginTop: 12 }}>{`cayó en el ${test.title}`}</div>
             <div
               style={{
-                marginTop: 22,
-                fontSize: bySize(result.title, [[20, 62], [30, 50]], 44),
-                lineHeight: 1.05,
-                color: colors.bluepop,
+                marginTop: 20,
+                fontSize: bySize(result.title, [[20, 60], [30, 50]], 44),
+                lineHeight: 1.04,
+                color: theme.text,
                 textTransform: "uppercase"
               }}
             >
@@ -99,54 +104,32 @@ export async function renderResultPreview(shared: SharedResult) {
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              alignSelf: "flex-start",
-              width: 280,
-              padding: "18px 10px",
-              backgroundColor: "#ffffff",
-              border: `8px solid ${colors.ink}`,
-              boxShadow: `12px 12px 0 ${colors.ink}`
-            }}
-          >
-            <span style={{ fontSize: 24 }}>PUNTAJE</span>
-            <span style={{ fontSize: 130, lineHeight: 1.1 }}>{score}</span>
-            <span style={{ fontSize: result.shortLabel.length > 12 ? 18 : 24, textAlign: "center" }}>
-              {result.shortLabel.toUpperCase()}
-            </span>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 320 }}>
+            <Gauge size={300} value={gaugeValue(shared)} />
+            <div style={{ display: "flex", alignItems: "flex-end", marginTop: 6 }}>
+              <span style={{ fontSize: 96, lineHeight: 1 }}>{score}</span>
+              <span style={{ fontSize: 36, marginBottom: 10 }}>{`/${max}`}</span>
+            </div>
           </div>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            margin: "0 36px 30px",
-            padding: "16px 26px",
-            backgroundColor: colors.mustard,
-            border: `6px solid ${colors.ink}`,
-            fontSize: 30
-          }}
-        >
-          <span>{invitation.question}</span>
-          <span>testometro.cl</span>
-        </div>
+        <BottomBar left={invitation.question} />
       </div>
     ),
     await imageOptions(1200, 630)
   );
 }
 
-// Imagen vertical 1080×1920 para historias de Instagram. Lo importante va en
-// el centro: Instagram tapa unos 250 px arriba y abajo con su interfaz.
+// Imagen vertical 1080×1920 para historias de Instagram, con fondo del color
+// del test. Instagram tapa unos 250 px arriba y 340 abajo con su interfaz:
+// la tarjeta va entre esas dos zonas, lo más grande posible. Sus textos van
+// en negro sobre crema, para que se lean sobre cualquier color de test.
 export async function renderResultStory(shared: SharedResult) {
   const { test, score, nickname, result } = shared;
   const invitation = getInvitation(test.slug, test.title);
+  const theme = getTestTheme(test.slug);
+  const { max } = getScoreBounds(test);
+  const named = hasName(nickname);
 
   return new ImageResponse(
     (
@@ -156,35 +139,32 @@ export async function renderResultStory(shared: SharedResult) {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          padding: "0 70px",
-          backgroundColor: colors.tomato,
+          alignItems: "center",
+          padding: "250px 50px 0",
+          backgroundColor: theme.bg,
           color: colors.ink,
           fontFamily: "Archivo Black"
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: 44,
-            color: colors.paper
-          }}
-        >
-          <span style={{ fontSize: 58 }}>TESTÓMETRO CHILENO</span>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", color: theme.on }}>
+          <span style={{ fontSize: 54, lineHeight: 1 }}>TESTÓMETRO CHILENO</span>
           {/* Cuenta de Instagram: firma bajo la marca, lejos del resultado y
-              dentro de la zona que Instagram no tapa (sobre 250 px de margen). */}
-          <span style={{ fontSize: 36, marginTop: 8, opacity: 0.9 }}>@eltestometro</span>
+              dentro de la zona que Instagram no tapa. */}
+          <span style={{ fontSize: 34, lineHeight: 1, marginTop: 12 }}>@eltestometro</span>
         </div>
 
         <div
           style={{
             display: "flex",
             flexDirection: "column",
+            width: 962,
+            height: 1150,
+            marginTop: 20,
             backgroundColor: colors.paper,
             border: `12px solid ${colors.ink}`,
-            boxShadow: `22px 22px 0 ${colors.ink}`
+            borderRadius: 34,
+            boxShadow: `18px 18px 0 ${colors.ink}`,
+            overflow: "hidden"
           }}
         >
           <div
@@ -193,59 +173,56 @@ export async function renderResultStory(shared: SharedResult) {
               justifyContent: "center",
               backgroundColor: colors.ink,
               color: colors.paper,
-              padding: "20px 0",
-              fontSize: 40
+              padding: "22px 0",
+              fontSize: 42
             }}
           >
             ÚLTIMO MINUTO
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "50px 50px 56px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              flex: 1,
+              padding: "0 50px",
+              color: colors.ink
+            }}
+          >
+            <Gauge size={560} ticks value={gaugeValue(shared)} />
+            {named ? (
+              <div
+                style={{
+                  marginTop: 18,
+                  fontSize: bySize(nickname, [[8, 100], [12, 82], [16, 66]], 56),
+                  lineHeight: 1,
+                  textTransform: "uppercase",
+                  textAlign: "center"
+                }}
+              >
+                {nickname}
+              </div>
+            ) : null}
+            <div style={{ fontSize: 42, marginTop: named ? 16 : 24, textAlign: "center" }}>
+              {named ? `cayó en el ${test.title}` : `Resultado del ${test.title}`}
+            </div>
             <div
               style={{
-                fontSize: bySize(nickname, [[8, 104], [12, 84], [16, 68]], 58),
-                lineHeight: 1,
-                textTransform: "uppercase",
-                textAlign: "center"
-              }}
-            >
-              {nickname}
-            </div>
-            <div style={{ fontSize: 40, marginTop: 18, textAlign: "center" }}>
-              {`cayó en el ${test.title}`}
-            </div>
-
-            <div
-              style={{
-                marginTop: 44,
-                fontSize: bySize(result.title, [[16, 84], [24, 70], [32, 60]], 52),
-                lineHeight: 1.05,
-                color: colors.bluepop,
+                marginTop: 30,
+                fontSize: bySize(result.title, [[16, 82], [24, 68], [32, 58]], 50),
+                lineHeight: 1.04,
+                color: theme.text,
                 textTransform: "uppercase",
                 textAlign: "center"
               }}
             >
               {result.title}
             </div>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: 50,
-                width: 420,
-                padding: "22px 10px",
-                backgroundColor: "#ffffff",
-                border: `10px solid ${colors.ink}`,
-                boxShadow: `14px 14px 0 ${colors.ink}`
-              }}
-            >
-              <span style={{ fontSize: 34 }}>PUNTAJE</span>
-              <span style={{ fontSize: 200, lineHeight: 1.1 }}>{score}</span>
-              <span style={{ fontSize: result.shortLabel.length > 12 ? 26 : 34, textAlign: "center" }}>
-                {result.shortLabel.toUpperCase()}
-              </span>
+            <div style={{ display: "flex", alignItems: "flex-end", marginTop: 26 }}>
+              <span style={{ fontSize: 120, lineHeight: 1 }}>{score}</span>
+              <span style={{ fontSize: 52, marginBottom: 14 }}>{`/${max}`}</span>
             </div>
           </div>
 
@@ -256,11 +233,12 @@ export async function renderResultStory(shared: SharedResult) {
               alignItems: "center",
               backgroundColor: colors.mustard,
               borderTop: `10px solid ${colors.ink}`,
-              padding: "30px 20px"
+              padding: "28px 20px",
+              color: colors.ink
             }}
           >
             <span style={{ fontSize: 50, textAlign: "center" }}>{invitation.question}</span>
-            <span style={{ fontSize: 46, marginTop: 10, color: colors.tomato }}>testometro.cl</span>
+            <span style={{ fontSize: 46, marginTop: 8 }}>testometro.cl</span>
           </div>
         </div>
       </div>
@@ -269,20 +247,82 @@ export async function renderResultStory(shared: SharedResult) {
   );
 }
 
-function Gauge({ size, needle }: { size: number; needle: "low" | "high" }) {
-  const tip = needle === "high" ? { x: 168, y: 58 } : { x: 62, y: 62 };
+// La aguja del "-ómetro" (misma de components/brand/Gauge.tsx), con la punta
+// calculada a mano porque las imágenes no giran elementos.
+function Gauge({ size, value, ticks = false }: { size: number; value: number; ticks?: boolean }) {
+  const angle = Math.PI * (1 - Math.max(0, Math.min(1, value)));
+  const tip = { x: 110 + 76 * Math.cos(angle), y: 112 - 76 * Math.sin(angle) };
   return (
-    <svg width={size} height={Math.round(size * 0.555)} viewBox="0 0 220 122">
+    <svg width={size} height={Math.round(size * 0.6)} viewBox="0 0 220 132">
+      <path d="M20 112 A90 90 0 0 1 200 112" fill="none" stroke={colors.ink} strokeWidth="30" />
       <path d="M20 112 A90 90 0 0 1 65 34" fill="none" stroke={colors.mint} strokeWidth="22" />
       <path d="M65 34 A90 90 0 0 1 155 34" fill="none" stroke={colors.mustard} strokeWidth="22" />
       <path d="M155 34 A90 90 0 0 1 200 112" fill="none" stroke={colors.tomato} strokeWidth="22" />
+      {ticks
+        ? Array.from({ length: 11 }, (_, index) => {
+            const tickAngle = Math.PI * (1 - index / 10);
+            const inner = index % 5 === 0 ? 50 : 56;
+            return (
+              <line
+                key={index}
+                stroke={colors.ink}
+                strokeLinecap="round"
+                strokeWidth={index % 5 === 0 ? 4 : 2.5}
+                x1={110 + inner * Math.cos(tickAngle)}
+                x2={110 + 64 * Math.cos(tickAngle)}
+                y1={112 - inner * Math.sin(tickAngle)}
+                y2={112 - 64 * Math.sin(tickAngle)}
+              />
+            );
+          })
+        : null}
       <line x1="110" y1="112" x2={tip.x} y2={tip.y} stroke={colors.ink} strokeWidth="9" strokeLinecap="round" />
       <circle cx="110" cy="112" r="13" fill={colors.ink} />
     </svg>
   );
 }
 
-function PreviewFrame({ children, footer }: { children: ReactNode; footer: string }) {
+function TopBand({ theme }: { theme: TestTheme }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        backgroundColor: theme.bg,
+        borderBottom: `8px solid ${colors.ink}`,
+        padding: "14px 36px",
+        color: theme.on,
+        fontSize: 28
+      }}
+    >
+      <span>ÚLTIMO MINUTO</span>
+      <span>TESTÓMETRO CHILENO</span>
+    </div>
+  );
+}
+
+function BottomBar({ left }: { left: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        margin: "0 36px 30px",
+        padding: "16px 26px",
+        backgroundColor: colors.mustard,
+        border: `6px solid ${colors.ink}`,
+        fontSize: 30
+      }}
+    >
+      <span>{left}</span>
+      <span>testometro.cl</span>
+    </div>
+  );
+}
+
+function PreviewFrame({ children, footer, theme }: { children: ReactNode; footer: string; theme: TestTheme }) {
   return (
     <div
       style={{
@@ -296,37 +336,9 @@ function PreviewFrame({ children, footer }: { children: ReactNode; footer: strin
         fontFamily: "Archivo Black"
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: colors.tomato,
-          borderBottom: `8px solid ${colors.ink}`,
-          padding: "14px 36px",
-          color: colors.paper,
-          fontSize: 28
-        }}
-      >
-        <span>ÚLTIMO MINUTO</span>
-        <span>TESTÓMETRO CHILENO</span>
-      </div>
+      <TopBand theme={theme} />
       <div style={{ display: "flex", flex: 1, alignItems: "center", padding: "0 36px" }}>{children}</div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          margin: "0 36px 30px",
-          padding: "16px 26px",
-          backgroundColor: colors.mustard,
-          border: `6px solid ${colors.ink}`,
-          fontSize: 30
-        }}
-      >
-        <span>{footer}</span>
-        <span>testometro.cl</span>
-      </div>
+      <BottomBar left={footer} />
     </div>
   );
 }
@@ -334,14 +346,16 @@ function PreviewFrame({ children, footer }: { children: ReactNode; footer: strin
 // Vista previa de la portada de un test (/tests/<slug>): la pregunta del test
 // en grande. Reemplaza al meme genérico, que pesaba 885 KB.
 export async function renderTestPreview(input: {
+  slug: string;
   headline: string;
   title: string;
   questionCount: number;
   durationLabel: string;
 }) {
+  const theme = getTestTheme(input.slug);
   return new ImageResponse(
     (
-      <PreviewFrame footer="Sí o no · gratis · sin registro">
+      <PreviewFrame footer="Sí o no · gratis · sin registro" theme={theme}>
         <div style={{ display: "flex", flexDirection: "column", flex: 1, paddingRight: 24 }}>
           <div
             style={{
@@ -352,12 +366,12 @@ export async function renderTestPreview(input: {
           >
             {input.headline}
           </div>
-          <div style={{ fontSize: 34, marginTop: 22, color: colors.tomato }}>
+          <div style={{ fontSize: 30, marginTop: 22, color: theme.text }}>
             {`${input.title} · ${input.questionCount} preguntas · ${input.durationLabel}`}
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 280 }}>
-          <Gauge size={270} needle="high" />
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 300 }}>
+          <Gauge size={290} ticks value={0.8} />
         </div>
       </PreviewFrame>
     ),
@@ -369,7 +383,7 @@ export async function renderTestPreview(input: {
 export async function renderSitePreview(input: { tagline: string; testCount: number }) {
   return new ImageResponse(
     (
-      <PreviewFrame footer={`${input.testCount} tests · sí o no · gratis`}>
+      <PreviewFrame footer={`${input.testCount} tests · sí o no · gratis`} theme={getTestTheme("chantometro")}>
         <div style={{ display: "flex", flexDirection: "column", flex: 1, paddingRight: 24 }}>
           <div style={{ fontSize: 96, lineHeight: 0.95, textTransform: "uppercase" }}>Testómetro</div>
           <div style={{ fontSize: 96, lineHeight: 0.95, textTransform: "uppercase", color: colors.tomato }}>
@@ -377,8 +391,8 @@ export async function renderSitePreview(input: { tagline: string; testCount: num
           </div>
           <div style={{ fontSize: 40, marginTop: 24 }}>{input.tagline}</div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 280 }}>
-          <Gauge size={270} needle="high" />
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 300 }}>
+          <Gauge size={290} ticks value={0.75} />
         </div>
       </PreviewFrame>
     ),

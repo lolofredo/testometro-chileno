@@ -13,6 +13,7 @@ export async function GET(_request: Request, { params }: RouteProps) {
   if (!test) return new Response("Not found", { status: 404 });
 
   return renderTestPreview({
+    slug: test.slug,
     headline: getTestHeadline(test.slug, test.title),
     title: test.title,
     questionCount: test.questions.length,
