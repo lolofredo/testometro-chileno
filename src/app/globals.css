@@ -21,6 +21,8 @@ body {
   min-height: 100vh;
   background: #fbf6ea;
   color: #17120f;
+  /* Alto del aviso de cookies mientras se muestra (CookieBanner). */
+  padding-bottom: var(--cookie-bar, 0px);
 }
 
 button,

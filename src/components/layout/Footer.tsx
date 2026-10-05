@@ -11,12 +11,15 @@ export function Footer() {
             se publica tal como circuló en los 2000.
           </p>
         </div>
-        <nav className="flex gap-5 text-xs font-bold uppercase text-paper/80">
+        <nav className="flex flex-wrap gap-x-5 text-xs font-bold uppercase text-paper/80">
           <Link className="focus-ring inline-flex min-h-11 items-center underline-offset-4 hover:underline" href="/about">
             Sobre el proyecto
           </Link>
           <Link className="focus-ring inline-flex min-h-11 items-center underline-offset-4 hover:underline" href="/rankings">
             Rankings
+          </Link>
+          <Link className="focus-ring inline-flex min-h-11 items-center underline-offset-4 hover:underline" href="/privacidad">
+            Privacidad
           </Link>
         </nav>
       </div>

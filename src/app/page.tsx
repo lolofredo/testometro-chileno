@@ -47,14 +47,14 @@ export default function HomePage() {
   const featuredMemes = memes.slice(0, 6);
 
   return (
-    <div className="px-4 pb-10 pt-4 sm:px-6 lg:pt-10">
+    <div className="px-4 pb-10 pt-3 sm:px-6 lg:pt-10">
       <section className="mx-auto grid max-w-6xl gap-4 lg:grid-cols-[minmax(0,1fr)_470px] lg:items-center lg:gap-10">
         {/* Titular: "Testómetro Chileno" sigue siendo el h1 para Google; la
             pregunta es solo visual (no es título ni párrafo) y la frase de
             "tests chilenos" sigue siendo el primer párrafo. */}
         <div className="text-center lg:text-left">
           <Gauge
-            className="mx-auto h-auto w-[208px] lg:mx-0 lg:w-[380px]"
+            className="mx-auto h-auto w-[196px] lg:mx-0 lg:w-[380px]"
             size={380}
             sweep
             ticks

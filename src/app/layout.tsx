@@ -1,6 +1,8 @@
 import { Analytics } from "@vercel/analytics/next";
 import { Archivo_Black } from "next/font/google";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { ReviewModeBanner } from "@/components/analytics/ReviewModeBanner";
+import { CookieBanner } from "@/components/consent/CookieBanner";
 import { VisitOriginTracker } from "@/components/analytics/VisitOriginTracker";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
@@ -52,6 +54,8 @@ export default function RootLayout({
         />
         <Analytics />
         <VisitOriginTracker />
+        <GoogleAnalytics />
+        <CookieBanner />
       </body>
     </html>
   );

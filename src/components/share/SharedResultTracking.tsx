@@ -74,7 +74,7 @@ export function SharedStickyCta({
   if (!visible) return null;
 
   return (
-    <div className="sticky bottom-0 z-20 bg-canvas/95 px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 backdrop-blur sm:hidden">
+    <div className="sticky bottom-[var(--cookie-bar,0px)] z-20 bg-canvas/95 px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 backdrop-blur sm:hidden">
       <ShareCtaLink
         className="focus-ring flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-test px-4 text-sm font-black uppercase text-test-on shadow-lift"
         href={href}

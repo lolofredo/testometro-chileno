@@ -88,7 +88,7 @@ export function StickyWhatsAppBar(props: ShareInput) {
   if (shareSectionReached) return null;
 
   return (
-    <div className="sticky bottom-0 z-20 bg-test px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 sm:hidden">
+    <div className="sticky bottom-[var(--cookie-bar,0px)] z-20 bg-test px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 sm:hidden">
       <a
         className="focus-ring flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-whatsapp px-4 text-sm font-black uppercase text-ink shadow-lift"
         href={whatsappHref}
