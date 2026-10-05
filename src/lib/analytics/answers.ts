@@ -1,4 +1,5 @@
 import type { AnswerValue, TestDefinition } from "@/lib/tests/types";
+import { canWriteData } from "@/lib/data-writes";
 import { getAnalyticsClient } from "./events";
 
 // Respuestas anónimas, solo como contadores (ver supabase/answers.sql). Al
@@ -21,6 +22,7 @@ export function recordAnonymousAnswers(
   test: TestDefinition,
   answers: Record<string, AnswerValue>
 ) {
+  if (!canWriteData()) return;
   const supabase = getAnalyticsClient();
   if (!supabase) return;
 

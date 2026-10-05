@@ -1,3 +1,4 @@
+import { canWriteData } from "@/lib/data-writes";
 import { getSupabaseClient, hasSupabaseConfig } from "./client";
 import type { LeaderboardEntry } from "@/lib/tests/types";
 
@@ -50,7 +51,7 @@ export async function fetchRemoteLeaderboard(
 }
 
 export async function addRemoteLeaderboardEntry(entry: LeaderboardEntry) {
-  if (!hasSupabaseConfig()) return false;
+  if (!hasSupabaseConfig() || !canWriteData()) return false;
 
   const supabase = getSupabaseClient();
   if (!supabase) return false;

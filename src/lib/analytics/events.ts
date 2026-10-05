@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { canWriteData } from "@/lib/data-writes";
 import type { VisitOrigin } from "./origin";
 
 // Eventos de medición en la tabla `events` de Supabase (ver supabase/events.sql).
@@ -51,6 +52,7 @@ export function getAnalyticsClient() {
 }
 
 export function trackEvent(event: EventName, data: EventData) {
+  if (!canWriteData()) return;
   const supabase = getAnalyticsClient();
   if (!supabase) return;
 
