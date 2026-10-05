@@ -38,7 +38,7 @@ export function NameStep({
         <h1 className="display text-[23px] leading-[1.02] sm:text-3xl">¿Con qué nombre sale tu resultado?</h1>
 
         <label className="block" htmlFor="nickname">
-          <span className="mb-1.5 block text-xs font-black uppercase tracking-[0.05em]">Nickname</span>
+          <span className="mb-1.5 block text-xs font-black uppercase tracking-[0.05em]">Tu nombre o apodo</span>
           <input
             autoComplete="nickname"
             className="focus-ring h-[54px] w-full rounded-xl border-2 border-ink bg-white px-3.5 text-lg font-bold"
