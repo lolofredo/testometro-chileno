@@ -4,7 +4,7 @@
 
 :root {
   color-scheme: light;
-  background: #fff8e7;
+  background: #fbf6ea;
   color: #17120f;
 }
 
@@ -19,11 +19,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    linear-gradient(rgba(23, 18, 15, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(23, 18, 15, 0.035) 1px, transparent 1px),
-    #fff8e7;
-  background-size: 24px 24px;
+  background: #fbf6ea;
   color: #17120f;
 }
 
@@ -60,4 +56,34 @@ input {
 
 .focus-ring {
   @apply focus:outline-none focus:ring-4 focus:ring-mustard/70;
+}
+
+.display {
+  font-family: var(--font-display), "Arial Black", sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* Barrido de la aguja al cargar (components/brand/Gauge.tsx). */
+@media (prefers-reduced-motion: no-preference) {
+  .gauge-sweep {
+    animation: gauge-sweep 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    transform-box: view-box;
+    transform-origin: 110px 112px;
+  }
+}
+
+@keyframes gauge-sweep {
+  0% {
+    transform: rotate(-80deg);
+  }
+  75% {
+    transform: rotate(6deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
