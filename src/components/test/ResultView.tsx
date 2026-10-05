@@ -9,6 +9,7 @@ import { NextTestCard } from "./NextTestCard";
 import { ShareButtons, StickyWhatsAppBar } from "./ShareButtons";
 import type { StoredSession } from "@/lib/tests/types";
 import { getTestBySlug, tests } from "@/data/tests";
+import { fetchScorePercentile } from "@/lib/analytics/percentile";
 import { getInvitation, getTestHeadline } from "@/lib/share/share-copy";
 import { calculateScore, getResultRange, getScoreBounds } from "@/lib/tests/scoring";
 import { getCompletedTestSlugs, getStoredSession, hasChosenNickname } from "@/lib/tests/storage";
@@ -38,6 +39,7 @@ export function ResultView({
 }) {
   const [session, setSession] = useState<StoredSession | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [percentile, setPercentile] = useState<number | null>(null);
   const [nextTest, setNextTest] = useState<{ test: TestDefinition; alreadyDidAll: boolean } | null>(
     null
   );
@@ -57,6 +59,18 @@ export function ResultView({
     const result = getResultRange(test, score);
     return { score, result, bounds: getScoreBounds(test) };
   }, [session, test]);
+
+  const resultScore = resultData?.score;
+  useEffect(() => {
+    if (!test || resultScore === undefined) return;
+    let active = true;
+    void fetchScorePercentile(test.slug, resultScore).then((value) => {
+      if (active) setPercentile(value);
+    });
+    return () => {
+      active = false;
+    };
+  }, [test, resultScore]);
 
   if (!loaded) return null;
 
@@ -142,6 +156,17 @@ export function ResultView({
             <h1 className="display mt-2 text-[38px] sm:text-5xl">{result.title}</h1>
             <p className="mt-3 text-[15.5px] font-semibold leading-relaxed">{result.description}</p>
           </section>
+
+          {/* Solo con 50 resultados o más en el test, y si no da 0%. */}
+          {adjective && percentile !== null && percentile >= 1 ? (
+            <p className="rounded-xl border-2 border-dashed border-test-on px-3 py-2.5 text-center text-sm font-bold">
+              Más {adjective} que el{" "}
+              <span className="font-display text-lg underline decoration-[3px] underline-offset-[3px]">
+                {percentile}%
+              </span>{" "}
+              de quienes hicieron el {test.title}
+            </p>
+          ) : null}
         </div>
 
         <div className="grid gap-4">
