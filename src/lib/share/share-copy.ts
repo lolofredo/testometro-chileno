@@ -26,6 +26,11 @@ const invitations: Record<string, Invitation> = {
     question: "¿Y tú qué tan chanta eres?",
     cta: "Hacer el Chantómetro",
     adjective: "chanta"
+  },
+  farandulometro: {
+    question: "¿Y tú qué tan farandulero eres?",
+    cta: "Hacer el Farandulómetro",
+    adjective: "farandulero"
   }
 };
 
@@ -40,7 +45,7 @@ export function getInvitation(testSlug: string, testTitle: string): Invitation {
 
 // Tests cuyo `shareText` de cada grupo es una frase escrita para compartir.
 // Los demás tienen "Obtuve X en el Y" y usan el formato general.
-const testsWithSharePhrases = new Set(["rotometro-2", "cuicometro", "chantometro"]);
+const testsWithSharePhrases = new Set(["rotometro-2", "cuicometro", "chantometro", "farandulometro"]);
 
 // Pregunta principal del test, sin el "¿Y tú": "¿Qué tan chanta eres?".
 export function getTestHeadline(testSlug: string, testTitle: string) {

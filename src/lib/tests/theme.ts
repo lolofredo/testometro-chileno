@@ -22,7 +22,8 @@ const colorBySlug: Record<string, TestColorName> = {
   chantometro: "tomate",
   cuicometro: "mostaza",
   "rotometro-2": "menta",
-  "rotometro-original": "azul"
+  "rotometro-original": "azul",
+  farandulometro: "chicle"
 };
 
 const ink = "#17120f";

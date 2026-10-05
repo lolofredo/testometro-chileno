@@ -2,18 +2,24 @@
 // leído directo de src/data/ (sin copiar a mano). Volver a correrlo y pegar
 // el SQL en Supabase cada vez que cambien preguntas o versiones:
 //   node --experimental-strip-types scripts/generate-questions-sql.mjs
+// Con un test nuevo, generar además un archivo solo con ese test (más corto
+// de pegar), en supabase/questions-<test>.sql:
+//   node --experimental-strip-types scripts/generate-questions-sql.mjs <test>
 import { writeFileSync } from "node:fs";
+
+const onlySlug = process.argv[2];
 
 const dataFiles = [
   ["../src/data/rotometro-original.ts", "rotometroOriginal"],
   ["../src/data/rotometro-2.ts", "rotometro2"],
   ["../src/data/cuicometro.ts", "cuicometro"],
-  ["../src/data/chantometro.ts", "chantometro"]
+  ["../src/data/chantometro.ts", "chantometro"],
+  ["../src/data/farandulometro.ts", "farandulometro"]
 ];
 
 const quote = (value) => `'${String(value).replace(/'/g, "''")}'`;
 
-const lines = [
+const header = [
   "-- Generado por scripts/generate-questions-sql.mjs. No editar a mano.",
   "-- Se pega en Supabase: SQL Editor -> New query -> Run, SIN seleccionar texto.",
   "-- Reemplaza las preguntas de cada test y versión; se puede correr de nuevo.",
@@ -31,9 +37,11 @@ const lines = [
   "revoke all on table questions from anon, authenticated;",
   ""
 ];
+const lines = [...header];
 
 for (const [path, exportName] of dataFiles) {
   const test = (await import(new URL(path, import.meta.url)))[exportName];
+  if (onlySlug && test.slug !== onlySlug) continue;
   lines.push(
     `delete from questions where test_slug = ${quote(test.slug)} and test_version = ${quote(test.version)};`,
     "insert into questions (test_slug, test_version, number, text) values"
@@ -50,5 +58,7 @@ for (const [path, exportName] of dataFiles) {
 
 lines.push("notify pgrst, 'reload schema';");
 
-writeFileSync(new URL("../supabase/questions.sql", import.meta.url), `${lines.join("\n")}\n`);
-console.log("supabase/questions.sql generado");
+const fileName = onlySlug ? `questions-${onlySlug}.sql` : "questions.sql";
+if (lines.length === header.length) throw new Error(`No hay un test con slug ${onlySlug}`);
+writeFileSync(new URL(`../supabase/${fileName}`, import.meta.url), `${lines.join("\n")}\n`);
+console.log(`supabase/${fileName} generado`);

@@ -9,12 +9,13 @@ import { getOrderedTestCards } from "@/lib/tests/cards";
 export const metadata: Metadata = {
   title: "Rankings | Resultados públicos de tests chilenos",
   description:
-    "Rankings públicos del Testómetro Chileno: resultados del Rotómetro Original, Rotómetro 2.0, Cuicómetro, Chantómetro y tests de cultura popular chilena.",
+    "Rankings públicos del Testómetro Chileno: resultados del Rotómetro Original, Rotómetro 2.0, Cuicómetro, Chantómetro, Farandulómetro y tests de cultura popular chilena.",
   keywords: [
     ...siteConfig.keywords,
     "ranking Rotómetro",
     "ranking Cuicómetro",
     "ranking Chantómetro",
+    "ranking Farandulómetro",
     "resultados tests chilenos"
   ],
   alternates: {
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Rankings | Testómetro Chileno",
     description:
-      "Rankings públicos del Rotómetro, Cuicómetro, Chantómetro y tests chilenos.",
+      "Rankings públicos del Rotómetro, Cuicómetro, Chantómetro, Farandulómetro y tests chilenos.",
     images: [siteOgImage.url]
   }
 };

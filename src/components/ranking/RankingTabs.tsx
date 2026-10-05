@@ -7,7 +7,7 @@ type Tab = { slug: string; title: string; panel: ReactNode };
 
 const hashPrefix = "#ranking-";
 
-// Una pestaña por test. Los cuatro rankings están en la página (Google los
+// Una pestaña por test. Todos los rankings están en la página (Google los
 // lee todos); las pestañas solo muestran uno a la vez. Los links antiguos
 // /rankings#ranking-<test> abren directo su pestaña.
 export function RankingTabs({ tabs }: { tabs: Tab[] }) {

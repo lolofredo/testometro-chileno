@@ -13,14 +13,14 @@ import { absoluteUrl, siteConfig, siteOgImage } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "Testómetro Chileno | Tests chilenos, memes y humor chileno",
   description:
-    "Plataforma de tests chilenos, memes chilenos, humor y cultura popular chilena: Rotómetro Original, Rotómetro 2.0, Cuicómetro, Chantómetro y nostalgia del Chile actual.",
+    "Plataforma de tests chilenos, memes chilenos, humor y cultura popular chilena: Rotómetro Original, Rotómetro 2.0, Cuicómetro, Chantómetro, Farandulómetro y nostalgia del Chile actual.",
   alternates: {
     canonical: absoluteUrl("/")
   },
   openGraph: {
     title: "Testómetro Chileno",
     description:
-      "Tests chilenos de humor, cultura popular chilena, memes, nostalgia, Rotómetro, Cuicómetro y Chantómetro.",
+      "Tests chilenos de humor, cultura popular chilena, memes, nostalgia, Rotómetro, Cuicómetro, Chantómetro y Farandulómetro.",
     url: absoluteUrl("/"),
     siteName: siteConfig.name,
     locale: siteConfig.locale,
