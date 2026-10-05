@@ -8,6 +8,7 @@ import { getLeaderboard } from "@/lib/tests/storage";
 import { fetchRemoteLeaderboard } from "@/lib/supabase/leaderboard";
 import { cleanShareNickname, RANKING_NICKNAME_MAX_LENGTH } from "@/lib/share/nickname";
 import { getResultRange, getScoreBounds } from "@/lib/tests/scoring";
+import { testThemeStyle } from "@/lib/tests/theme";
 
 // La tabla acepta cualquier texto desde la clave pública, así que al mostrar
 // se filtra el nickname, se descartan puntajes imposibles y el grupo se
@@ -24,14 +25,58 @@ function toDisplayEntries(test: TestDefinition, entries: LeaderboardEntry[]) {
     }));
 }
 
+type DisplayEntry = LeaderboardEntry;
+
+const podiumOrder = [1, 0, 2];
+const podiumHeights = ["h-[118px]", "h-[92px]", "h-[76px]"];
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("es-CL", { dateStyle: "short" }).format(new Date(value));
+}
+
+// Los tres primeros en un podio (segundo, primero, tercero).
+function Podium({ entries }: { entries: DisplayEntry[] }) {
+  return (
+    <ol className="grid grid-cols-3 items-end gap-2 sm:gap-3">
+      {podiumOrder.map((place) => {
+        const entry = entries[place];
+        return (
+          <li className="flex min-w-0 flex-col items-center text-center" key={place}>
+            {entry ? (
+              <>
+                <span className="w-full truncate text-sm font-black sm:text-base">{entry.nickname}</span>
+                <span className="mb-1.5 line-clamp-2 text-[11px] font-bold leading-tight text-muted">
+                  {entry.groupTitle}
+                </span>
+              </>
+            ) : (
+              <span className="mb-1.5 text-sm font-bold text-muted">—</span>
+            )}
+            <span
+              className={`flex w-full flex-col items-center justify-start rounded-t-xl pt-2 ${podiumHeights[place]} ${
+                place === 0 ? "bg-test text-test-on" : "bg-ink text-paper"
+              }`}
+            >
+              <span className="font-display text-2xl leading-none">{place + 1}°</span>
+              {entry ? <span className="mt-1 text-sm font-black">{entry.score} pts</span> : null}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 export function RankingView({
   headingLevel = "h1",
   test,
-  title
+  title,
+  description
 }: {
   headingLevel?: "h1" | "h2";
   test: TestDefinition;
   title?: string;
+  description?: string;
 }) {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [source, setSource] = useState<"local" | "global">("local");
@@ -62,15 +107,13 @@ export function RankingView({
   }, [test]);
 
   return (
-    <section className="mx-auto max-w-5xl">
-      <div className="mb-6 border-4 border-ink bg-paper p-5 shadow-[8px_8px_0_#17120f]">
-        <p className="mb-2 text-xs font-black uppercase text-tomato">
-          Marcador público
-        </p>
-        <Heading className="text-3xl font-black uppercase leading-none sm:text-6xl">
-          {title ?? `Ranking ${test.title}`}
-        </Heading>
-        <p className="mt-3 max-w-2xl font-semibold text-ink/75">
+    <section className="mt-3" style={testThemeStyle(test.slug)}>
+      <div className="mb-5">
+        <Heading className="display text-[28px] sm:text-5xl">{title ?? `Ranking ${test.title}`}</Heading>
+        {description ? (
+          <p className="mt-2 max-w-2xl text-sm font-semibold text-ink/75">{description}</p>
+        ) : null}
+        <p className="mt-1 max-w-2xl text-sm font-semibold text-ink/75">
           {source === "global"
             ? "Los mejores puntajes de quienes eligieron aparecer."
             : "Mostrando solo los resultados de este celular."}
@@ -78,45 +121,38 @@ export function RankingView({
       </div>
 
       {entries.length === 0 ? (
-        <div className="border-4 border-ink bg-white p-6 text-center shadow-[8px_8px_0_#17120f]">
-          <p className="mb-4 text-xl font-black uppercase">
-            Todavía no hay resultados públicos
-          </p>
+        <div className="rounded-2xl bg-white p-6 text-center">
+          <p className="mb-4 text-xl font-black uppercase">Todavía no hay resultados públicos</p>
           <Link
-            className="focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-3 text-sm font-black uppercase text-paper"
+            className="focus-ring inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-test px-5 text-sm font-black uppercase text-test-on"
             href={`/tests/${test.slug}/start`}
           >
             Ser el primero
-            <ArrowRight size={18} strokeWidth={3} />
+            <ArrowRight aria-hidden="true" size={18} strokeWidth={2.8} />
           </Link>
         </div>
       ) : (
-        <div className="overflow-hidden border-4 border-ink bg-paper shadow-[8px_8px_0_#17120f]">
-          <div className="grid grid-cols-[64px_1fr_80px] border-b-4 border-ink bg-ink px-3 py-3 text-sm font-black uppercase text-paper sm:grid-cols-[80px_1fr_100px_1fr_160px]">
-            <span>#</span>
-            <span>Nickname</span>
-            <span>Puntos</span>
-            <span className="hidden sm:block">Grupo</span>
-            <span className="hidden sm:block">Fecha</span>
-          </div>
-          {entries.map((entry, index) => (
-            <div
-              className="grid grid-cols-[64px_1fr_80px] border-b-2 border-ink/20 px-3 py-4 text-sm font-bold last:border-b-0 sm:grid-cols-[80px_1fr_100px_1fr_160px]"
-              key={entry.sessionId}
-            >
-              <span className="font-black">{index + 1}</span>
-              <span>{entry.nickname}</span>
-              <span className="font-black">{entry.score}</span>
-              <span className="hidden sm:block">{entry.groupTitle}</span>
-              <span className="hidden sm:block">
-                {new Intl.DateTimeFormat("es-CL", {
-                  dateStyle: "short",
-                  timeStyle: "short"
-                }).format(new Date(entry.completedAt))}
-              </span>
-            </div>
-          ))}
-        </div>
+        <>
+          <Podium entries={entries} />
+          {entries.length > 3 ? (
+            <ol className="mt-4 overflow-hidden rounded-2xl bg-white" start={4}>
+              {entries.slice(3).map((entry, index) => (
+                <li
+                  className="grid grid-cols-[40px_minmax(0,1fr)_auto] items-center gap-2 border-b border-ink/10 px-3 py-3 text-sm last:border-b-0 sm:grid-cols-[48px_minmax(0,1fr)_minmax(0,1fr)_auto_90px] sm:px-4"
+                  key={entry.sessionId}
+                >
+                  <span className="font-black text-muted">{index + 4}</span>
+                  <span className="truncate font-bold">{entry.nickname}</span>
+                  <span className="hidden truncate font-semibold text-muted sm:block">{entry.groupTitle}</span>
+                  <span className="font-black">{entry.score} pts</span>
+                  <span className="hidden text-right text-xs font-semibold text-muted sm:block">
+                    {formatDate(entry.completedAt)}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          ) : null}
+        </>
       )}
     </section>
   );

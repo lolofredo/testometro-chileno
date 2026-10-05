@@ -1,25 +1,35 @@
 // Textos de invitación por test. Viven aquí y no en src/data/ para no tocar
 // el archivo del Rotómetro Original.
-const invitations: Record<string, { question: string; cta: string }> = {
+// `headline` reemplaza la pregunta como título del test cuando hace falta
+// distinguirlo (los dos Rotómetros preguntan lo mismo). `adjective` arma la
+// comparación "Más chanta que el X%".
+type Invitation = { question: string; cta: string; headline?: string; adjective?: string };
+
+const invitations: Record<string, Invitation> = {
   "rotometro-original": {
     question: "¿Y tú qué tan roto eres?",
-    cta: "Hacer el Rotómetro Original"
+    cta: "Hacer el Rotómetro Original",
+    headline: "¿Qué tan roto eras en los 2000?",
+    adjective: "roto"
   },
   "rotometro-2": {
     question: "¿Y tú qué tan roto eres?",
-    cta: "Hacer el Rotómetro 2.0"
+    cta: "Hacer el Rotómetro 2.0",
+    adjective: "roto"
   },
   cuicometro: {
     question: "¿Y tú qué tan cuico eres?",
-    cta: "Hacer el Cuicómetro"
+    cta: "Hacer el Cuicómetro",
+    adjective: "cuico"
   },
   chantometro: {
     question: "¿Y tú qué tan chanta eres?",
-    cta: "Hacer el Chantómetro"
+    cta: "Hacer el Chantómetro",
+    adjective: "chanta"
   }
 };
 
-export function getInvitation(testSlug: string, testTitle: string) {
+export function getInvitation(testSlug: string, testTitle: string): Invitation {
   return (
     invitations[testSlug] ?? {
       question: "¿Y a ti qué te sale?",
@@ -34,7 +44,8 @@ const testsWithSharePhrases = new Set(["rotometro-2", "cuicometro", "chantometro
 
 // Pregunta principal del test, sin el "¿Y tú": "¿Qué tan chanta eres?".
 export function getTestHeadline(testSlug: string, testTitle: string) {
-  const { question } = getInvitation(testSlug, testTitle);
+  const { question, headline } = getInvitation(testSlug, testTitle);
+  if (headline) return headline;
   return question.replace(/^¿Y tú qué/, "¿Qué").replace(/^¿Y a ti qué/, "¿Qué");
 }
 
