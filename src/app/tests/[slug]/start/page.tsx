@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTestBySlug } from "@/data/tests";
-import { StartForm } from "@/components/test/StartForm";
+import { TestStarter } from "@/components/test/TestStarter";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -23,9 +23,5 @@ export default async function StartPage({ params }: PageProps) {
 
   if (!test) notFound();
 
-  return (
-    <div className="px-4 py-8 sm:px-6 sm:py-12">
-      <StartForm test={test} />
-    </div>
-  );
+  return <TestStarter questionCount={test.questions.length} slug={test.slug} title={test.title} />;
 }

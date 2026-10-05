@@ -5,6 +5,7 @@ import { VisitOriginTracker } from "@/components/analytics/VisitOriginTracker";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { HideInGame } from "@/components/layout/HideInGame";
 import {
   defaultMetadata,
   organizationJsonLd,
@@ -30,10 +31,15 @@ export default function RootLayout({
   return (
     <html className={displayFont.variable} data-scroll-behavior="smooth" lang="es">
       <body className="min-h-screen font-sans antialiased">
+        <ReviewModeBanner />
         <div className="flex min-h-screen flex-col">
-          <Header />
+          <HideInGame>
+            <Header />
+          </HideInGame>
           <main className="flex-1">{children}</main>
-          <Footer />
+          <HideInGame>
+            <Footer />
+          </HideInGame>
         </div>
         <script
           type="application/ld+json"
@@ -46,7 +52,6 @@ export default function RootLayout({
         />
         <Analytics />
         <VisitOriginTracker />
-        <ReviewModeBanner />
       </body>
     </html>
   );

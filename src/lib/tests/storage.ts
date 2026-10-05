@@ -1,10 +1,14 @@
 "use client";
 
+import type { QuestionFormat } from "@/lib/review-mode";
+import { ANONYMOUS_NICKNAME } from "@/lib/share/nickname";
 import type { AnswerValue, LeaderboardEntry, StoredSession } from "./types";
 
 const sessionPrefix = "testometro:session:";
 const activeSessionPrefix = "testometro:active:";
 const leaderboardPrefix = "testometro:leaderboard:";
+const lastNicknameKey = "testometro:last-nickname";
+const lastPublicKey = "testometro:last-public";
 
 export function createSessionId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -41,20 +45,22 @@ export function saveStoredSession(session: StoredSession) {
 
 export function createStoredSession(input: {
   testSlug: string;
-  nickname: string;
-  isPublic: boolean;
   fromShare: boolean;
+  format: QuestionFormat;
   origin?: { source: string; campaign?: string };
 }) {
+  // El nombre y el ranking se eligen al final del test.
   const session: StoredSession = {
     sessionId: createSessionId(),
     testSlug: input.testSlug,
-    nickname: input.nickname,
-    isPublic: input.isPublic,
+    nickname: "",
+    isPublic: false,
     fromShare: input.fromShare,
     ...(input.origin ? { origin: input.origin } : {}),
     answers: {},
+    format: input.format,
     currentBlock: 0,
+    currentQuestion: 0,
     updatedAt: new Date().toISOString()
   };
 
@@ -102,15 +108,54 @@ export function setCurrentBlock(session: StoredSession, currentBlock: number) {
   return nextSession;
 }
 
-export function completeSession(session: StoredSession) {
+export function setCurrentQuestion(session: StoredSession, currentQuestion: number) {
+  const nextSession: StoredSession = { ...session, currentQuestion };
+  saveStoredSession(nextSession);
+  return nextSession;
+}
+
+export function completeSession(
+  session: StoredSession,
+  choice: { nickname: string; isPublic: boolean }
+) {
   const nextSession: StoredSession = {
     ...session,
-    completedAt: new Date().toISOString()
+    nickname: choice.nickname,
+    isPublic: choice.isPublic,
+    completedAt: session.completedAt ?? new Date().toISOString()
   };
 
   saveStoredSession(nextSession);
   clearActiveSessionId(session.testSlug);
   return nextSession;
+}
+
+// Sin nombre: vacío, o "Anónimo" en las sesiones antiguas y en los nombres
+// que el filtro rechaza.
+export function hasChosenNickname(nickname: string) {
+  return nickname.trim() !== "" && nickname !== ANONYMOUS_NICKNAME;
+}
+
+// Último nombre y elección de ranking, para no pedirlos de nuevo en el
+// siguiente test.
+export function getLastNameChoice() {
+  try {
+    return {
+      nickname: window.localStorage.getItem(lastNicknameKey) ?? "",
+      isPublic: window.localStorage.getItem(lastPublicKey) === "1"
+    };
+  } catch {
+    return { nickname: "", isPublic: false };
+  }
+}
+
+export function saveLastNameChoice(choice: { nickname: string; isPublic: boolean }) {
+  try {
+    if (choice.nickname) window.localStorage.setItem(lastNicknameKey, choice.nickname);
+    window.localStorage.setItem(lastPublicKey, choice.isPublic ? "1" : "0");
+  } catch {
+    // Sin localStorage se vuelve a escribir la próxima vez.
+  }
 }
 
 // Tests que esta persona ya terminó en este celular (para recomendar otro).

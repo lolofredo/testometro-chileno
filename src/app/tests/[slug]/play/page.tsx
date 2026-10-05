@@ -25,10 +25,8 @@ export default async function PlayPage({ params }: PageProps) {
   if (!test) notFound();
 
   return (
-    <div className="px-4 py-8 sm:px-6 sm:py-12">
-      <Suspense>
-        <TestPlayer test={test} />
-      </Suspense>
-    </div>
+    <Suspense>
+      <TestPlayer test={test} />
+    </Suspense>
   );
 }

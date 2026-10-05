@@ -1,3 +1,5 @@
+import type { QuestionFormat } from "@/lib/review-mode";
+
 export type AnswerValue = "yes" | "no";
 
 export type TestQuestion = {
@@ -33,6 +35,8 @@ export type TestDefinition = {
 export type StoredSession = {
   sessionId: string;
   testSlug: string;
+  // Se elige al final; vacío si la persona no puso nombre. Las sesiones
+  // antiguas lo traen desde el inicio (o "Anónimo").
   nickname: string;
   isPublic: boolean;
   // Empezó el test después de abrir un resultado compartido (para medición).
@@ -40,7 +44,11 @@ export type StoredSession = {
   // De dónde llegó al sitio la visita en que empezó el test (para medición).
   origin?: { source: string; campaign?: string };
   answers: Record<string, AnswerValue>;
+  // Formato de preguntas de la prueba A/B (sesiones antiguas no lo tienen).
+  format?: QuestionFormat;
   currentBlock: number;
+  // Pregunta en pantalla en el formato "una" (índice desde 0).
+  currentQuestion?: number;
   completedAt?: string;
   updatedAt: string;
 };

@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { canWriteData } from "@/lib/data-writes";
+import type { QuestionFormat } from "@/lib/review-mode";
 import type { VisitOrigin } from "./origin";
 
 // Eventos de medición en la tabla `events` de Supabase (ver supabase/events.sql).
@@ -27,6 +28,9 @@ type EventData = {
   block?: number;
   // Origen de la visita, solo en test_started y test_completed.
   origin?: VisitOrigin;
+  // Formato de preguntas (prueba A/B), en test_started, test_completed y
+  // block_completed.
+  format?: QuestionFormat;
 };
 
 const fromShareKey = "testometro:from-share";
@@ -65,10 +69,11 @@ export function trackEvent(event: EventName, data: EventData) {
       channel: data.channel ?? null,
       score: data.score ?? null,
       from_share: data.fromShare ?? false,
-      // Las columnas `block`, `source` y `campaign` solo se envían cuando
-      // hay dato, para que los demás eventos no fallen si la tabla aún no
-      // las tiene.
+      // Las columnas `block`, `source`, `campaign` y `format` solo se
+      // envían cuando hay dato, para que los demás eventos no fallen si la
+      // tabla aún no las tiene.
       ...(data.block !== undefined ? { block: data.block } : {}),
+      ...(data.format ? { format: data.format } : {}),
       ...(data.origin ? { source: data.origin.source, campaign: data.origin.campaign ?? null } : {})
     })
     .then(({ error }) => {
