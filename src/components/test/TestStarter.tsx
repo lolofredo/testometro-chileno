@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GameScreen, GameTopBar } from "@/components/game/GameChrome";
 import { arrivedFromShare, trackEvent } from "@/lib/analytics/events";
-import { getVisitOrigin } from "@/lib/analytics/origin";
+import { captureVisitOrigin, getVisitOrigin } from "@/lib/analytics/origin";
 import { chooseQuestionFormat } from "@/lib/tests/question-format";
 import { createStoredSession, getActiveSessionId, getStoredSession } from "@/lib/tests/storage";
 
@@ -33,6 +33,9 @@ export function TestStarter({
     if (started.current) return;
     started.current = true;
     const fromShare = arrivedFromShare();
+    // Si el sitio se abrió directo en esta página, el origen aún no se anotó
+    // (VisitOriginTracker corre después).
+    captureVisitOrigin(window.location.href, document.referrer);
     const origin = getVisitOrigin();
     const format = chooseQuestionFormat({ slug });
     const session = createStoredSession({ testSlug: slug, fromShare, origin, format });
