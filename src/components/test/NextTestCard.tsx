@@ -5,9 +5,11 @@ import { ArrowRight } from "lucide-react";
 import { trackEvent } from "@/lib/analytics/events";
 import { getInvitation } from "@/lib/share/share-copy";
 import { getDurationLabel } from "@/lib/tests/duration";
+import { testThemeStyle } from "@/lib/tests/theme";
 import type { TestDefinition } from "@/lib/tests/types";
 
-// Tarjeta "Siguiente test" del resultado: un test que la persona no ha hecho.
+// Tarjeta "Siguiente test" del resultado, en el color de ese test: uno que la
+// persona no ha hecho.
 export function NextTestCard({
   nextTest,
   alreadyDidAll,
@@ -20,22 +22,23 @@ export function NextTestCard({
   const invitation = getInvitation(nextTest.slug, nextTest.title);
 
   return (
-    <section className="mt-6 border-4 border-ink bg-mustard p-5 shadow-[8px_8px_0_#17120f] sm:p-6">
-      <p className="mb-2 text-xs font-black uppercase text-ink/70">
+    <Link
+      className="focus-ring grid gap-2.5 rounded-[18px] bg-test p-4 text-test-on shadow-[0_0_0_2px_rgba(23,18,15,0.25)] transition hover:-translate-y-0.5 sm:p-5"
+      href={`/tests/${nextTest.slug}/start`}
+      onClick={() => trackEvent("next_test_click", { testSlug: nextTest.slug, sessionId })}
+      style={testThemeStyle(nextTest.slug)}
+    >
+      <span className="text-[11px] font-black uppercase tracking-[0.09em]">
         {alreadyDidAll ? "Otro test" : "Siguiente test"}
-      </p>
-      <p className="text-3xl font-black uppercase leading-none sm:text-4xl">{invitation.question}</p>
-      <p className="mt-2 text-sm font-bold text-ink/75">
+      </span>
+      <span className="display text-[22px] sm:text-3xl">{invitation.question}</span>
+      <span className="text-[13px] font-bold">
         {nextTest.title} · {nextTest.questions.length} preguntas · {getDurationLabel(nextTest)}
-      </p>
-      <Link
-        className="focus-ring mt-4 flex w-full items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-4 text-base font-black uppercase text-paper shadow-[5px_5px_0_#17120f] transition hover:-translate-y-0.5 sm:w-auto sm:px-8"
-        href={`/tests/${nextTest.slug}/start`}
-        onClick={() => trackEvent("next_test_click", { testSlug: nextTest.slug, sessionId })}
-      >
+      </span>
+      <span className="inline-flex items-center gap-1.5 text-sm font-black uppercase">
         {invitation.cta}
-        <ArrowRight size={20} strokeWidth={3} />
-      </Link>
-    </section>
+        <ArrowRight aria-hidden="true" size={18} strokeWidth={2.8} />
+      </span>
+    </Link>
   );
 }

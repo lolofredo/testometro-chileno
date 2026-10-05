@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, Instagram, Share2 } from "lucide-react";
 import { absoluteUrl } from "@/lib/seo";
 import { getSharePath } from "@/lib/share/result-link";
 import { getShareText } from "@/lib/share/share-copy";
@@ -89,23 +88,23 @@ export function StickyWhatsAppBar(props: ShareInput) {
   if (shareSectionReached) return null;
 
   return (
-    <div className="sticky bottom-0 z-20 -mx-4 mt-8 border-t-4 border-ink bg-paper p-3 sm:hidden">
+    <div className="sticky bottom-0 z-20 bg-test px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 sm:hidden">
       <a
-        className="focus-ring flex w-full items-center justify-center gap-2 border-4 border-ink bg-[#25d366] px-4 py-3 text-sm font-black uppercase text-ink"
+        className="focus-ring flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-whatsapp px-4 text-sm font-black uppercase text-ink shadow-lift"
         href={whatsappHref}
         rel="noopener noreferrer"
         target="_blank"
         onClick={() => trackShare(props, "whatsapp")}
       >
         <WhatsAppIcon />
-        Compartir por WhatsApp
+        Mandarlo por WhatsApp
       </a>
     </div>
   );
 }
 
-export function ShareButtons(props: ShareInput) {
-  const { testTitle } = props;
+export function ShareButtons(props: ShareInput & { title: string }) {
+  const { testTitle, title } = props;
   const [copied, setCopied] = useState(false);
   const [canNativeShare, setCanNativeShare] = useState(false);
   const [storyFile, setStoryFile] = useState<File | null>(null);
@@ -175,35 +174,53 @@ export function ShareButtons(props: ShareInput) {
   }
 
   const secondaryButton =
-    "focus-ring inline-flex items-center justify-center gap-2 border-4 border-ink bg-white px-4 py-3 text-sm font-black uppercase";
+    "focus-ring inline-flex min-h-[46px] items-center justify-center gap-1.5 rounded-[10px] border-2 border-ink px-1 text-[11px] font-black uppercase";
 
   return (
-    <section
-      className="mt-6 border-4 border-ink bg-paper p-4 shadow-[8px_8px_0_#17120f] sm:p-6"
-      id={shareSectionId}
-    >
-      <p className="mb-3 text-center text-lg font-black uppercase sm:text-xl">
-        Compártelo y desafía a tus amigos
-      </p>
+    <section className="rounded-[18px] bg-paper p-4 text-ink sm:p-5" id={shareSectionId}>
+      <p className="display text-[20px] sm:text-2xl">{title}</p>
+
+      {/* La misma imagen que verán en WhatsApp o X. Sin next/image: ya es
+          liviana y pasarla por el optimizador de Vercel gastaría cuota. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        alt={`Vista previa del resultado en el ${testTitle}`}
+        className="mt-3 aspect-[1200/630] w-full rounded-[10px] border-2 border-ink bg-canvas object-cover"
+        height={630}
+        src={`${sharePath}/og`}
+        width={1200}
+      />
+      <p className="mt-1.5 text-center text-xs font-bold text-muted">Así lo verán tus amigos</p>
 
       <a
-        className="focus-ring flex w-full items-center justify-center gap-2 border-4 border-ink bg-[#25d366] px-5 py-4 text-base font-black uppercase text-ink shadow-[5px_5px_0_#17120f] transition hover:-translate-y-0.5"
+        className="focus-ring mt-3.5 flex min-h-[54px] w-full items-center justify-center gap-2 rounded-xl bg-whatsapp px-5 text-[15px] font-black uppercase text-ink shadow-lift transition hover:-translate-y-0.5"
         href={whatsappHref}
         rel="noopener noreferrer"
         target="_blank"
         onClick={() => trackShare(props, "whatsapp")}
       >
         <WhatsAppIcon />
-        Compartir por WhatsApp
+        Mandarlo por WhatsApp
       </a>
 
-      <div className={`mt-3 grid gap-3 ${canNativeShare ? "grid-cols-3" : "grid-cols-2"}`}>
-        {canNativeShare ? (
-          <button className={secondaryButton} type="button" onClick={nativeShare}>
-            <Share2 size={18} strokeWidth={3} />
-            Otras
+      <div className={`mt-3 grid gap-2 ${canNativeShare ? "grid-cols-4" : "grid-cols-3"}`}>
+        {storyFile ? (
+          <button className={secondaryButton} type="button" onClick={shareStory}>
+            Historia
           </button>
-        ) : null}
+        ) : (
+          <a
+            className={secondaryButton}
+            download="testometro-historia.png"
+            href={storyPath}
+            onClick={() => {
+              trackShare(props, "story");
+              setStoryHint(true);
+            }}
+          >
+            Historia
+          </a>
+        )}
         <a
           className={secondaryButton}
           href={`https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(withShareOrigin(shareUrl, "x"))}`}
@@ -214,34 +231,14 @@ export function ShareButtons(props: ShareInput) {
           <XIcon />X
         </a>
         <button className={secondaryButton} type="button" onClick={copyLink}>
-          <Copy size={18} strokeWidth={3} />
           {copied ? "Copiado" : "Copiar"}
         </button>
+        {canNativeShare ? (
+          <button className={secondaryButton} type="button" onClick={nativeShare}>
+            Más
+          </button>
+        ) : null}
       </div>
-
-      {storyFile ? (
-        <button
-          className="focus-ring mt-3 flex w-full items-center justify-center gap-2 border-4 border-ink bg-mustard px-4 py-3 text-sm font-black uppercase"
-          type="button"
-          onClick={shareStory}
-        >
-          <Instagram size={18} strokeWidth={3} />
-          Imagen para historia
-        </button>
-      ) : (
-        <a
-          className="focus-ring mt-3 flex w-full items-center justify-center gap-2 border-4 border-ink bg-mustard px-4 py-3 text-sm font-black uppercase"
-          download="testometro-historia.png"
-          href={storyPath}
-          onClick={() => {
-            trackShare(props, "story");
-            setStoryHint(true);
-          }}
-        >
-          <Instagram size={18} strokeWidth={3} />
-          Descargar imagen para historia
-        </a>
-      )}
 
       {storyHint ? (
         <p className="mt-2 text-center text-xs font-bold text-ink/80">

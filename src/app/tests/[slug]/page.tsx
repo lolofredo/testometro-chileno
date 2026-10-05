@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Clock, Trophy } from "lucide-react";
-import { Gauge } from "@/components/brand/Gauge";
+import { GaugeDial } from "@/components/brand/GaugeDial";
 import { getTestBySlug } from "@/data/tests";
 import { getTestHeadline } from "@/lib/share/share-copy";
 import { howItWorks } from "@/lib/tests/cards";
@@ -117,7 +117,7 @@ export default async function TestDetailPage({ params }: PageProps) {
       />
       <section className="bg-test text-test-on">
         <div className="mx-auto grid max-w-3xl justify-items-center gap-3 px-4 pb-6 pt-5 text-center sm:pb-10 sm:pt-8">
-          <Gauge className="h-auto w-[210px] sm:w-[260px]" size={260} sweep value={0.8} />
+          <GaugeDial size={200} sweep value={0.8} />
           <h1>
             <span className="block text-[11px] font-black uppercase tracking-[0.09em] sm:text-xs">
               {test.title}

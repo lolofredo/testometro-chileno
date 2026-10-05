@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ShareCtaLink, TrackSharedOpen } from "@/components/share/SharedResultTracking";
 import { ArrowRight } from "lucide-react";
-import { ResultCard } from "@/components/test/ResultCard";
+import { GaugeDial } from "@/components/brand/GaugeDial";
+import { SharedStickyCta, ShareCtaLink, TrackSharedOpen } from "@/components/share/SharedResultTracking";
 import { tests } from "@/data/tests";
 import { getSharedResult } from "@/lib/share/result-link";
 import { getInvitation } from "@/lib/share/share-copy";
+import { ANONYMOUS_NICKNAME } from "@/lib/share/nickname";
+import { getScoreBounds } from "@/lib/tests/scoring";
+import { testThemeStyle } from "@/lib/tests/theme";
 import { absoluteUrl, siteConfig } from "@/lib/seo";
 
 type PageProps = {
@@ -64,13 +67,11 @@ export default async function SharedResultPage({ params }: PageProps) {
 
   if (!shared) {
     return (
-      <div className="px-4 py-8 sm:px-6 sm:py-12">
-        <div className="mx-auto max-w-2xl border-4 border-ink bg-paper p-6 text-center shadow-[8px_8px_0_#17120f]">
-          <p className="mb-4 text-xl font-black uppercase">
-            Este resultado no existe o el link está incompleto
-          </p>
+      <div className="px-4 py-10">
+        <div className="mx-auto max-w-xl text-center">
+          <p className="display mb-4 text-2xl">Este resultado no existe o el link está incompleto</p>
           <Link
-            className="focus-ring inline-flex border-4 border-ink bg-tomato px-5 py-3 text-sm font-black uppercase text-paper"
+            className="focus-ring inline-flex min-h-[52px] items-center rounded-xl bg-tomato px-6 text-sm font-black uppercase text-paper shadow-lift"
             href="/tests"
           >
             Ver tests
@@ -83,44 +84,61 @@ export default async function SharedResultPage({ params }: PageProps) {
   const { test, score, nickname, result } = shared;
   const invitation = getInvitation(test.slug, test.title);
   const otherTests = tests.filter((item) => item.slug !== test.slug);
+  const named = nickname !== ANONYMOUS_NICKNAME;
+  const bounds = getScoreBounds(test);
 
   return (
-    <div className="px-4 pt-8 sm:px-6 sm:py-12">
+    <div style={testThemeStyle(test.slug)}>
       <TrackSharedOpen testSlug={test.slug} />
 
-      <div className="mx-auto max-w-5xl">
-        <ResultCard nickname={nickname} testTitle={test.title} score={score} result={result} />
+      <div className="mx-auto grid max-w-xl gap-4 px-4 py-5 sm:py-10">
+        <section className="rounded-[20px] bg-test p-[18px] text-center text-test-on">
+          <p className="text-[11px] font-black uppercase tracking-[0.09em]">
+            {named ? `${nickname} hizo el ${test.title}` : `Resultado del ${test.title}`}
+          </p>
+          <div className="mt-3">
+            <GaugeDial size={190} sweep value={(score - bounds.min) / Math.max(1, bounds.max - bounds.min)} />
+          </div>
+          {named ? (
+            <p className="mt-1 text-[11px] font-black uppercase tracking-[0.09em]">y es oficialmente</p>
+          ) : null}
+          <h1 className="display mt-1.5 text-[30px] sm:text-4xl">{result.title}</h1>
+          <p className="mt-3 inline-flex items-baseline rounded-full bg-paper px-3.5 py-1.5 font-display text-[22px] text-ink">
+            {score}
+            <span className="text-[13px]">/{bounds.max}</span>
+          </p>
+          <p className="mt-3 font-semibold">{result.description}</p>
+        </section>
 
-        <section className="mt-8 border-4 border-ink bg-mustard p-5 text-center shadow-[8px_8px_0_#17120f] sm:p-8">
-          <p className="mb-4 text-3xl font-black uppercase leading-none sm:text-5xl">
-            {invitation.question}
-          </p>
-          <p className="mx-auto mb-6 max-w-xl font-semibold leading-relaxed text-ink/80">
-            {test.questions.length} preguntas de sí o no. Gratis y sin registrarte.
-          </p>
+        <section className="grid gap-3 rounded-[18px] bg-white p-[18px] text-center" id="invitacion">
+          <p className="display text-2xl sm:text-3xl">{invitation.question}</p>
           <ShareCtaLink
             sharedTestSlug={test.slug}
-            className="focus-ring inline-flex w-full items-center justify-center gap-2 border-4 border-ink bg-tomato px-5 py-4 text-base font-black uppercase text-paper shadow-[5px_5px_0_#17120f] transition hover:-translate-y-0.5 hover:shadow-[7px_7px_0_#17120f] sm:w-auto sm:px-10"
+            className="focus-ring flex min-h-[54px] items-center justify-center gap-2 rounded-xl bg-test px-5 text-[15px] font-black uppercase text-test-on shadow-lift transition hover:-translate-y-0.5"
             href={`/tests/${test.slug}`}
           >
             {invitation.cta}
-            <ArrowRight size={20} strokeWidth={3} />
+            <ArrowRight aria-hidden="true" size={18} strokeWidth={2.8} />
           </ShareCtaLink>
+          <p className="text-[13px] font-bold text-muted">
+            {test.questions.length} preguntas de sí o no. Gratis y sin registrarte.
+          </p>
         </section>
 
         {otherTests.length > 0 ? (
-          <section className="mt-8">
-            <p className="mb-3 text-sm font-black uppercase text-ink/60">Otros tests</p>
-            <div className="grid gap-3 sm:grid-cols-2">
+          <section>
+            <p className="mb-2 text-xs font-black uppercase tracking-[0.05em] text-muted">Otros tests</p>
+            <div className="grid gap-2.5 sm:grid-cols-2">
               {otherTests.map((item) => (
                 <ShareCtaLink
                   sharedTestSlug={test.slug}
                   key={item.slug}
-                  className="focus-ring flex items-center justify-between gap-3 border-4 border-ink bg-white px-5 py-4 font-black uppercase"
+                  className="focus-ring flex min-h-[52px] items-center justify-between gap-3 rounded-2xl bg-test px-4 py-3 text-sm font-black uppercase text-test-on"
                   href={`/tests/${item.slug}`}
+                  style={testThemeStyle(item.slug)}
                 >
                   {item.title}
-                  <ArrowRight size={18} strokeWidth={3} />
+                  <ArrowRight aria-hidden="true" size={18} strokeWidth={2.8} />
                 </ShareCtaLink>
               ))}
             </div>
@@ -128,16 +146,12 @@ export default async function SharedResultPage({ params }: PageProps) {
         ) : null}
       </div>
 
-      <div className="sticky bottom-0 z-20 -mx-4 mt-8 border-t-4 border-ink bg-mustard p-3 sm:hidden">
-        <ShareCtaLink
-          sharedTestSlug={test.slug}
-          className="focus-ring flex w-full items-center justify-center gap-2 border-4 border-ink bg-tomato px-4 py-3 text-sm font-black uppercase text-paper"
-          href={`/tests/${test.slug}`}
-        >
-          {invitation.question}
-          <ArrowRight size={18} strokeWidth={3} />
-        </ShareCtaLink>
-      </div>
+      <SharedStickyCta
+        href={`/tests/${test.slug}`}
+        label={invitation.cta}
+        sharedTestSlug={test.slug}
+        targetId="invitacion"
+      />
     </div>
   );
 }

@@ -18,9 +18,5 @@ export const metadata: Metadata = {
 export default async function ResultPage({ params }: PageProps) {
   const { sessionId } = await params;
 
-  return (
-    <div className="px-4 py-8 sm:px-6 sm:py-12">
-      <ResultView sessionId={sessionId} />
-    </div>
-  );
+  return <ResultView sessionId={sessionId} />;
 }
